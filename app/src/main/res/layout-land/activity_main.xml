@@ -8,19 +8,20 @@
 
     <ListView
         android:id="@+id/ListViewPokedex"
-        android:layout_width="0dp"
-        android:layout_height="417dp"
+        android:layout_width="354dp"
+        android:layout_height="373dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginBottom="14dp"
-        app:layout_constraintBottom_toTopOf="@+id/editTextAdd"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.066"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewPokedex" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.131" />
 
     <TextView
         android:id="@+id/textViewPokedex"
@@ -31,49 +32,50 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:text="@string/pokedex"
         android:textColor="#0D3FA0"
         android:textSize="22sp"
+        app:layout_constraintBottom_toTopOf="@+id/editTextAdd"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/ListViewPokedex"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/btnAdd"
-        android:layout_width="0dp"
+        android:layout_width="305dp"
         android:layout_height="46dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="52dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginBottom="12dp"
         android:background="#0D3FA0"
         android:text="@string/add"
         android:textColor="@android:color/background_light"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="0.166"
+        app:layout_constraintStart_toEndOf="@+id/ListViewPokedex"
         app:layout_constraintTop_toBottomOf="@+id/editTextAdd" />
 
     <EditText
         android:id="@+id/editTextAdd"
-        android:layout_width="0dp"
+        android:layout_width="300dp"
         android:layout_height="47dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
+        android:layout_marginTop="136dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginBottom="100dp"
         android:ems="10"
         android:hint="@string/add"
         android:inputType="text"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.31"
+        app:layout_constraintStart_toEndOf="@+id/ListViewPokedex"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </android.support.constraint.ConstraintLayout>
