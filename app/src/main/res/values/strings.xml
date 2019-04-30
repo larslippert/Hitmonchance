@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Hitmonchance</string>
+    <string name="Login">Login</string>
+    <string name="email_login">E-mail</string>
+    <string name="password_login">Password</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="sign_up">Sign up</string>
+    <string name="sign_in">Sign in</string>
 </resources>

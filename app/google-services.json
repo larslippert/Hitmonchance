@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "64551822332",
+    "firebase_url": "https://hitmonchance-pokedex.firebaseio.com",
+    "project_id": "hitmonchance-pokedex",
+    "storage_bucket": "hitmonchance-pokedex.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:64551822332:android:13728cf4c5590b05",
+        "android_client_info": {
+          "package_name": "com.lalov.hitmonchance"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "64551822332-0s861qns9a7mgkgimjmh1n2ugocbqb6m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAD2fvz9JICfqfekvb87KUmrb6bnJlZ1fY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "64551822332-0s861qns9a7mgkgimjmh1n2ugocbqb6m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
