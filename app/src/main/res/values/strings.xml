@@ -6,4 +6,6 @@
     <string name="forgot_password">Forgot password?</string>
     <string name="sign_up">Sign up</string>
     <string name="sign_in">Sign in</string>
+    <string name="textViewName">Name</string>
+    <string name="textViewLevel">Level</string>
 </resources>
