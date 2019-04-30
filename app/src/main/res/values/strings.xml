@@ -10,4 +10,6 @@
     <string name="add">Add pokemon to pokedex</string>
     <string name="name">Name:</string>
     <string name="level">Level:</string>
+    <string name="textViewName">Name</string>
+    <string name="textViewLevel">Level</string>
 </resources>
