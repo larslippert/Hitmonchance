@@ -6,4 +6,8 @@
     <string name="forgot_password">Forgot password?</string>
     <string name="sign_up">Sign up</string>
     <string name="sign_in">Sign in</string>
+    <string name="pokedex">Pokedex</string>
+    <string name="add">Add pokemon to pokedex</string>
+    <string name="name">Name:</string>
+    <string name="level">Level:</string>
 </resources>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Hitmonchance</string>
+    <string name="Login">Log ind</string>
+    <string name="email_login">E-mail</string>
+    <string name="password_login">Kodeorde</string>
+    <string name="forgot_password">Glemt kodeord?</string>
+    <string name="sign_up">Opret mig</string>
+    <string name="sign_in">Log ind</string>
+    <string name="pokedex">Pokedex</string>
+    <string name="add">Tilføj pokemon til pokedex</string>
+    <string name="name">Navn:</string>
+    <string name="level">Level:</string>
+</resources>
