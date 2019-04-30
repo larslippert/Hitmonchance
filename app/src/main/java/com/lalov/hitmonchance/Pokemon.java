@@ -5,6 +5,7 @@ import java.io.Serializable;
 public class Pokemon implements Serializable {
     private int id;
     private String name;
+    private int level;
     private String attack1;
     private String attack2;
     private int hp;
@@ -22,8 +23,10 @@ public class Pokemon implements Serializable {
 
     public Pokemon(){
     }
-    public Pokemon(int Id,String Attack1,String Attack2, int Hp,int Attack, int Defense, int Spattack,int Spdefense, int Speed, int Generation, boolean Legendary){
+    public Pokemon(int Id,String Name,int Level,String Attack1,String Attack2, int Hp,int Attack, int Defense, int Spattack,int Spdefense, int Speed, int Generation, boolean Legendary){
         this.id = Id;
+        this.name = Name;
+        this.level = Level;
         this.attack1 = Attack1;
         this.attack2 = Attack2;
         this.hp = Hp;
@@ -39,6 +42,16 @@ public class Pokemon implements Serializable {
         return id;
     }
     public void setID(int id) {this.id = id;}
+
+    public String getName(){
+        return name;
+    }
+    public void setName(String name) {this.name = name;}
+
+    public int getLevel(){
+        return level;
+    }
+    public void setLevel(int level) {this.level = level;}
 
     public String getAttack1(){
         return attack1;

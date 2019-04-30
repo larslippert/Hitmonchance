@@ -56,61 +56,24 @@ public class PokemonAdaptor extends BaseAdapter {
 
         pokemon = pokemons.get(position);
         if(pokemon !=null){
-            /*
-            TextView customTitle = (TextView) convertView.findViewById(R.id.textViewTitle);
-            customTitle.setText(movie.getTitle());
+            ImageView adaptorImage = (ImageView) convertView.findViewById(R.id.imageViewPokemon);
+            adaptorImage.setImageResource(R.drawable.pokeball);
 
-            ImageView customImage = (ImageView) convertView.findViewById(R.id.imageView);
-            int movieIcon = findIconFormovie(movie);
-            customImage.setImageResource(movieIcon);
+            ImageView adaptorStatus = (ImageView) convertView.findViewById(R.id.imageViewStatus);
+            adaptorStatus.setImageResource(R.drawable.pokeball);
 
-            TextView customRating = (TextView) convertView.findViewById(R.id.textViewIMDB);
-            customRating.setText(context.getResources().getString(R.string.overviewimdb)+movie.getRating());
+            TextView adaptorName = (TextView) convertView.findViewById(R.id.textViewName);
+            adaptorName.setText(pokemon.getName());
 
-            TextView customUserrating = (TextView) convertView.findViewById(R.id.textViewRating);
-            customUserrating.setText(movie.getUserRating());
+            TextView adaptorLevel = (TextView) convertView.findViewById(R.id.textViewLevel);
+            adaptorLevel.setText(pokemon.getLevel());
 
-            TextView customWatched = (TextView) convertView.findViewById(R.id.textViewWatched);
-            customWatched.setText(movie.getWatched());
-            */
         }
         return convertView;
     }
-    /*
-    // Method for finding the genre of the movie
-    private String findGenre(String genres){
-        String genre = genres.substring(0,genres.indexOf(','));
-        return genre;
-    }
-    // Method for finding the right icon for the movie based og genre.
-    // Icons found on https://emojiisland.com/pages/free-download-emoji-icons-png
-    public int findIconFormovie(Movie movie){
-        String genre = findGenre(movie.getGenres());
-        int genreIcon;
-        switch (genre){
-            case "Drama":
-                genreIcon= R.drawable.drama;
-                break;
-            case "Animation":
-                genreIcon = R.drawable.animation;
-                break;
-            case "Action":
-                genreIcon = R.drawable.action;
-                break;
-            case "Biography":
-                genreIcon = R.drawable.biography;
-                break;
-            case "Horror":
-                genreIcon = R.drawable.horror;
-                break;
-            default:
-                 genreIcon = R.drawable.unknown;
-        }
-        return genreIcon;
-    }
-    */
-    public void UpdateMovis(List<Pokemon> movieList){
+
+    public void UpdatePokemons(List<Pokemon> pokemonList){
            pokemons.clear();
-           pokemons.addAll(movieList);
+           pokemons.addAll(pokemonList);
     }
 }
