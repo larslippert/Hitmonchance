@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -35,12 +36,23 @@ public class LoginActivity extends AppCompatActivity {
     Button btnForgotPassword, btnSignUp, btnSignIn;
 
     private FirebaseAuth auth;
+    private List<AuthUI.IdpConfig> providers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);//will hide the title
-        getSupportActionBar().hide(); //hide the title bar
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getSupportActionBar().hide();
+
+        auth = FirebaseAuth.getInstance();
+
+        //TODO comment in when a logout button is created
+        /*
+        if (auth.getCurrentUser() != null) {
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
+        } */
+
         setContentView(R.layout.activity_login);
 
         txtEmail = findViewById(R.id.editTextEmail);
@@ -52,54 +64,98 @@ public class LoginActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
 
-        if (auth.getCurrentUser() != null) {
-            startActivity(new Intent(LoginActivity.this,MainActivity.class));
-            finish();
-        }
-
-        setContentView(R.layout.activity_login);
+        providers = Arrays.asList(
+                new AuthUI.IdpConfig.EmailBuilder().build(),
+                new AuthUI.IdpConfig.GoogleBuilder().build()
+        );
 
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email = txtEmail.getText().toString();
-                final String password = txtPassword.getText().toString();
+                Login();
+            }
+        });
 
-                if (TextUtils.isEmpty(email)) {
-                    Toast.makeText(getApplicationContext(), "Enter email address!", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+        btnSignUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SignUp();
+            }
+        });
 
-                if (TextUtils.isEmpty(password)) {
-                    Toast.makeText(getApplicationContext(), "Enter password!", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                auth.signInWithEmailAndPassword(email, password)
-                        .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                // If sign in fails, display a message to the user. If sign in succeeds
-                                // the auth state listener will be notified and logic to handle the
-                                // signed in user can be handled in the listener.
-                                if (!task.isSuccessful()) {
-                                    // there was an error
-                                    if (password.length() < 6) {
-                                        txtPassword.setError("Password is gay"); //TODO Change to string (also below)
-                                    } else {
-                                        Toast.makeText(LoginActivity.this, "Authentication failed", Toast.LENGTH_LONG).show();
-                                    }
-                                } else {
-                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                    startActivity(intent);
-                                    finish();
-                                }
-                            }
-                        });
+        btnForgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                auth.signOut();
+                AuthUI.getInstance().createSignInIntentBuilder().setIsSmartLockEnabled(false);
+                txtEmail.getText().clear();
             }
         });
     }
 
+    private void SignUp() {
+        String email = txtEmail.getText().toString().trim();
+        final String password = txtPassword.getText().toString().trim();
+
+        if (TextUtils.isEmpty(email)) {
+            Toast.makeText(this,"Pls enter email address",Toast.LENGTH_LONG).show();//TODO Externalize
+            return;
+        }
+        if (TextUtils.isEmpty(password)) {
+            Toast.makeText(this,"Pls enter password", Toast.LENGTH_LONG).show();//TODO Externalize
+            return;
+        }
+
+        auth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (!task.isSuccessful()) {
+                            Toast.makeText(LoginActivity.this, "Sign up failed", Toast.LENGTH_LONG).show();
+                        }
+                        else {
+                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                            finish();
+                        }
+                    }
+                });
+    }
+
+    private void Login() {
+        String email = txtEmail.getText().toString().trim();
+        final String password = txtPassword.getText().toString().trim();
+
+        if (TextUtils.isEmpty(email)) {
+            Toast.makeText(this,"Pls enter email address",Toast.LENGTH_LONG).show();//TODO Externalize
+            return;
+        }
+        if (TextUtils.isEmpty(password)) {
+            Toast.makeText(this,"Pls enter password", Toast.LENGTH_LONG).show();//TODO Externalize
+            return;
+        }
+
+        auth.signInWithEmailAndPassword(email,password)
+                .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (!task.isSuccessful()) {
+                            if (password.length() < 6) {
+                                txtPassword.setError("Error password is totally gay"); //TODO Externalize
+                            }
+                            else {
+                                Toast.makeText(LoginActivity.this,"Wrong email or password", Toast.LENGTH_LONG).show();
+                            }
+                        }
+                        else {
+                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                    }
+                });
+    }
+
+    /*
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -109,11 +165,14 @@ public class LoginActivity extends AppCompatActivity {
 
             if (resultCode == RESULT_OK) {
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT);
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show(); //TODO externalize string
             }
             else {
-                Toast.makeText(this, "Login failed", Toast.LENGTH_SHORT);
+                Toast.makeText(this, "Login failed", Toast.LENGTH_SHORT).show(); //TODO externalize string
             }
         }
     }
+    */
 }
