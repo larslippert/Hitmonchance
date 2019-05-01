@@ -43,13 +43,11 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         auth = FirebaseAuth.getInstance();
-
-        //TODO comment in when a logout button is created
-        /*
+        
         if (auth.getCurrentUser() != null) {
             startActivity(new Intent(this, MainActivity.class));
             finish();
-        } */
+        }
 
         setContentView(R.layout.activity_login);
 

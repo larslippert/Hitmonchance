@@ -12,4 +12,5 @@
     <string name="level">Level:</string>
     <string name="textViewName">Name</string>
     <string name="textViewLevel">Level</string>
+    <string name="Logout">Logout</string>
 </resources>
