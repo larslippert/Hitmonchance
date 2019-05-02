@@ -77,14 +77,15 @@
 
     <ImageButton
         android:id="@+id/imgBtnLogout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="31dp"
+        android:layout_height="28dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="8dp"
+        android:background="@android:color/transparent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_settings_black_24dp" />
+        app:srcCompat="@drawable/ic_exit_to_app_black_24dp" />
 
 
 </android.support.constraint.ConstraintLayout>
