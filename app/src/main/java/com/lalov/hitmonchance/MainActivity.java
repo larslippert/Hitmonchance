@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -53,6 +54,14 @@ public class MainActivity extends AppCompatActivity {
         pokemonAdaptor = new PokemonAdaptor(this, pokemonsList);
 
         pokemonListView.setAdapter(pokemonAdaptor);
+        pokemonListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getApplicationContext(), StatsActivity.class);
+                startActivity(intent);
+                return true;
+            }
+        });
 
         imgBtnSettings.setOnClickListener(new View.OnClickListener() {
             @Override
