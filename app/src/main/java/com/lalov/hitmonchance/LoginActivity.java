@@ -33,7 +33,7 @@ public class LoginActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 100;
     EditText txtEmail, txtPassword;
     TextView txtLogin;
-    Button btnForgotPassword, btnSignUp, btnSignIn;
+    Button btnSignUp, btnSignIn;
 
     private FirebaseAuth auth;
     private List<AuthUI.IdpConfig> providers;
@@ -54,7 +54,6 @@ public class LoginActivity extends AppCompatActivity {
         txtEmail = findViewById(R.id.editTextEmail);
         txtPassword = findViewById(R.id.editTextPassword);
         txtLogin = findViewById(R.id.txtLogin);
-        btnForgotPassword = findViewById(R.id.btnForgot);
         btnSignIn = findViewById(R.id.btnSignIn);
         btnSignUp = findViewById(R.id.btnSignUp);
 
@@ -78,15 +77,6 @@ public class LoginActivity extends AppCompatActivity {
                 SignUp();
             }
         });
-
-        btnForgotPassword.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                auth.signOut();
-                AuthUI.getInstance().createSignInIntentBuilder().setIsSmartLockEnabled(false);
-                txtEmail.getText().clear();
-            }
-        });
     }
 
     private void SignUp() {
@@ -107,7 +97,12 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (!task.isSuccessful()) {
-                            Toast.makeText(LoginActivity.this, "Sign up failed", Toast.LENGTH_LONG).show();
+                            if (password.length() < 6) {
+                                txtPassword.setError("Password is too short faggot"); //TODO Externalize
+                            }
+                            else {
+                                Toast.makeText(LoginActivity.this, "Sign up failed", Toast.LENGTH_LONG).show();
+                            }
                         }
                         else {
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
@@ -135,12 +130,7 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (!task.isSuccessful()) {
-                            if (password.length() < 6) {
-                                txtPassword.setError("Error password is totally gay"); //TODO Externalize
-                            }
-                            else {
-                                Toast.makeText(LoginActivity.this,"Wrong email or password", Toast.LENGTH_LONG).show();
-                            }
+                            txtPassword.setError("Email or password is gay as shit"); //TODO Externalize
                         }
                         else {
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -150,25 +140,4 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
     }
-
-    /*
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == RC_SIGN_IN) {
-            IdpResponse response = IdpResponse.fromResultIntent(data);
-
-            if (resultCode == RESULT_OK) {
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                Intent intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
-                Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show(); //TODO externalize string
-            }
-            else {
-                Toast.makeText(this, "Login failed", Toast.LENGTH_SHORT).show(); //TODO externalize string
-            }
-        }
-    }
-    */
 }
