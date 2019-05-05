@@ -3,4 +3,5 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#FF373D</color>
+    <color name="colorRedPokedex">#FF363C</color>
 </resources>
