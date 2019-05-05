@@ -13,4 +13,10 @@
     <string name="textViewName">Name</string>
     <string name="textViewLevel">Level</string>
     <string name="Logout">Logout</string>
+    <string name="username">Username</string>
+    <string name="choose_starter">Choose your starter pokemon</string>
+    <string name="squirtle">Squirtle</string>
+    <string name="charmander">Charmander</string>
+    <string name="bulbasaur">Bulbasaur</string>
+    <string name="createuser">Create your user</string>
 </resources>
