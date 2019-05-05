@@ -83,7 +83,6 @@ public class SignUpActivity extends AppCompatActivity {
         Map<String, Object> user = new HashMap<>();
         user.put("Username", txtUsername.getText().toString());
         user.put("uid", currentUser.getUid());
-        //user.put("Pokemon", pokemon);
 
         Log.d(TAG, currentUser.getUid());
 
@@ -116,7 +115,7 @@ public class SignUpActivity extends AppCompatActivity {
                     public void onFailure(@NonNull Exception e) {
                         Log.d(TAG, "Pokemon was not added! Error!");
                     }
-                });
+                }); 
 
 
         startActivity(new Intent(SignUpActivity.this, MainActivity.class));
