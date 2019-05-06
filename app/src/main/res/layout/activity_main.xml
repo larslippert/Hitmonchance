@@ -24,8 +24,8 @@
         android:id="@+id/textViewPokedex"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="102dp"
-        android:layout_marginLeft="102dp"
+        android:layout_marginStart="75dp"
+        android:layout_marginLeft="75dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="160dp"
         android:layout_marginRight="160dp"
@@ -35,7 +35,6 @@
         android:textColor="@color/colorRedPokedex"
         android:textSize="22sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.823"
         app:layout_constraintStart_toEndOf="@+id/imgBtnLogout"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -78,10 +77,10 @@
         android:id="@+id/imgBtnLogout"
         android:layout_width="31dp"
         android:layout_height="28dp"
-        android:layout_marginStart="28dp"
-        android:layout_marginLeft="28dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
         android:background="@android:color/transparent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textViewLogout"
         app:layout_constraintTop_toBottomOf="@+id/textViewUser"
         app:srcCompat="@drawable/ic_exit_to_app_black_24dp" />
 
@@ -89,8 +88,8 @@
         android:id="@+id/textViewUser"
         android:layout_width="106dp"
         android:layout_height="16dp"
-        android:layout_marginStart="11dp"
-        android:layout_marginLeft="11dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
         android:layout_marginTop="4dp"
         android:layout_marginEnd="295dp"
         android:layout_marginRight="295dp"
@@ -98,6 +97,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewLogout"
+        android:layout_width="45dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="4dp"
+        android:text="@string/Logout"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewUser" />
 
 
 </android.support.constraint.ConstraintLayout>

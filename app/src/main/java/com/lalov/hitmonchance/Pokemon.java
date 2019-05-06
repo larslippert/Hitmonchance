@@ -38,6 +38,7 @@ public class Pokemon implements Serializable {
         this.generation = Generation;
         this.legendary = Legendary;
     }
+
     public int getId(){
         return id;
     }
