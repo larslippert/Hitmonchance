@@ -7,15 +7,24 @@ import com.google.gson.annotations.SerializedName;
 
 public class PokeAPI {
 
+    @SerializedName("abilities")
+    @Expose
+    private List<Ability> abilities = null;
     @SerializedName("base_experience")
     @Expose
     private Integer baseExperience;
     @SerializedName("forms")
     @Expose
     private List<Form> forms = null;
+    @SerializedName("game_indices")
+    @Expose
+    private List<GameIndex> gameIndices = null;
     @SerializedName("height")
     @Expose
     private Integer height;
+    @SerializedName("held_items")
+    @Expose
+    private List<HeldItem> heldItems = null;
     @SerializedName("id")
     @Expose
     private Integer id;
@@ -25,19 +34,38 @@ public class PokeAPI {
     @SerializedName("location_area_encounters")
     @Expose
     private String locationAreaEncounters;
+    @SerializedName("moves")
+    @Expose
+    private List<Move> moves = null;
     @SerializedName("name")
     @Expose
     private String name;
     @SerializedName("order")
     @Expose
     private Integer order;
+    @SerializedName("species")
+    @Expose
+    private Species species;
+    @SerializedName("sprites")
+    @Expose
+    private Sprites sprites;
     @SerializedName("stats")
     @Expose
     private List<Stat> stats = null;
+    @SerializedName("types")
+    @Expose
+    private List<Type> types = null;
     @SerializedName("weight")
     @Expose
     private Integer weight;
 
+    public List<Ability> getAbilities() {
+        return abilities;
+    }
+
+    public void setAbilities(List<Ability> abilities) {
+        this.abilities = abilities;
+    }
 
     public Integer getBaseExperience() {
         return baseExperience;
@@ -55,12 +83,28 @@ public class PokeAPI {
         this.forms = forms;
     }
 
+    public List<GameIndex> getGameIndices() {
+        return gameIndices;
+    }
+
+    public void setGameIndices(List<GameIndex> gameIndices) {
+        this.gameIndices = gameIndices;
+    }
+
     public Integer getHeight() {
         return height;
     }
 
     public void setHeight(Integer height) {
         this.height = height;
+    }
+
+    public List<HeldItem> getHeldItems() {
+        return heldItems;
+    }
+
+    public void setHeldItems(List<HeldItem> heldItems) {
+        this.heldItems = heldItems;
     }
 
     public Integer getId() {
@@ -87,6 +131,14 @@ public class PokeAPI {
         this.locationAreaEncounters = locationAreaEncounters;
     }
 
+    public List<Move> getMoves() {
+        return moves;
+    }
+
+    public void setMoves(List<Move> moves) {
+        this.moves = moves;
+    }
+
     public String getName() {
         return name;
     }
@@ -103,12 +155,36 @@ public class PokeAPI {
         this.order = order;
     }
 
+    public Species getSpecies() {
+        return species;
+    }
+
+    public void setSpecies(Species species) {
+        this.species = species;
+    }
+
+    public Sprites getSprites() {
+        return sprites;
+    }
+
+    public void setSprites(Sprites sprites) {
+        this.sprites = sprites;
+    }
+
     public List<Stat> getStats() {
         return stats;
     }
 
     public void setStats(List<Stat> stats) {
         this.stats = stats;
+    }
+
+    public List<Type> getTypes() {
+        return types;
+    }
+
+    public void setTypes(List<Type> types) {
+        this.types = types;
     }
 
     public Integer getWeight() {

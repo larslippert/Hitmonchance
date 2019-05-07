@@ -3,19 +3,16 @@ package com.lalov.hitmonchance;
 import java.io.Serializable;
 
 public class Pokemon implements Serializable {
-    private int id;
+    private long id;
     private String name;
-    private int level;
-    private String attack1;
-    private String attack2;
-    private int hp;
-    private int attack;
-    private int defense;
-    private int spattack;
-    private int spdefense;
-    private int speed;
-    private int generation;
-    private boolean legendary;
+    private String type1;
+    private String type2;
+    private long hp;
+    private long attack;
+    private long defense;
+    private long spattack;
+    private long spdefense;
+    private long speed;
 
 
     //@PrimaryKey(autoGenerate = true)
@@ -23,84 +20,65 @@ public class Pokemon implements Serializable {
 
     //public Pokemon(){
     //}
-    public Pokemon(int Id,String Name,int Level,String Attack1,String Attack2, int Hp,int Attack, int Defense, int Spattack,int Spdefense, int Speed, int Generation, boolean Legendary){
+    public Pokemon(long Id,String Name,String Type1, long Speed, long Spdefense, long Spattack, long Defense, long Attack, long Hp){
         this.id = Id;
         this.name = Name;
-        this.level = Level;
-        this.attack1 = Attack1;
-        this.attack2 = Attack2;
+        this.type1 = Type1;
         this.hp = Hp;
         this.attack = Attack;
         this.defense = Defense;
         this.spattack = Spattack;
         this.spdefense = Spdefense;
         this.speed = Speed;
-        this.generation = Generation;
-        this.legendary = Legendary;
     }
 
-    public int getId(){
+    public long getId(){
         return id;
     }
-    public void setID(int id) {this.id = id;}
+    public void setID(long id) {this.id = id;}
 
     public String getName(){
         return name;
     }
     public void setName(String name) {this.name = name;}
 
-    public int getLevel(){
-        return level;
+    public String getType1(){
+        return type1;
     }
-    public void setLevel(int level) {this.level = level;}
+    public void setType1(String type1) {this.type1 = type1;}
 
-    public String getAttack1(){
-        return attack1;
+    public String getType2(){
+        return type2;
     }
-    public void setAttack1(String attack1) {this.attack1 = attack1;}
+    public void setType2(String type2) {this.type2 = type2;}
 
-    public String getAttack2(){
-        return attack2;
-    }
-    public void setAttack2(String attack2) {this.attack2 = attack2;}
-
-    public int getHp(){
+    public long getHp(){
         return hp;
     }
-    public void setHp(int hp) {this.hp = hp;}
+    public void setHp(long hp) {this.hp = hp;}
 
-    public int getAttack(){
+    public long getAttack(){
         return attack;
     }
-    public void setAttack(int attack) {this.attack = attack;}
+    public void setAttack(long attack) {this.attack = attack;}
 
-    public int getDefense(){
+    public long getDefense(){
         return defense;
     }
-    public void setDefense(int defense) {this.defense = defense;}
+    public void setDefense(long defense) {this.defense = defense;}
 
-    public int getSpattack(){
+    public long getSpattack(){
         return spattack;
     }
-    public void setSpattack(int spattack) {this.spattack = spattack;}
+    public void setSpattack(long spattack) {this.spattack = spattack;}
 
-    public int getSpdefense(){
+    public long getSpdefense(){
         return spdefense;
     }
-    public void setSpdefense(int spdefense) {this.spdefense = spdefense;}
+    public void setSpdefense(long spdefense) {this.spdefense = spdefense;}
 
-    public int getSpeed(){
+    public long getSpeed(){
         return speed;
     }
-    public void setSpeed(int speed) {this.speed = speed;}
-
-    public int getGeneration(){
-        return generation;
-    }
-    public void setGeneration(int generation) {this.generation = generation;}
-
-    public boolean getLegendary(){
-        return legendary;
-    }
-    public void setLegendary(boolean legendary) {this.legendary = legendary;}
+    public void setSpeed(long speed) {this.speed = speed;}
 }

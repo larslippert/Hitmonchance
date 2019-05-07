@@ -1,7 +1,13 @@
 package com.lalov.hitmonchance.Activities;
 
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
+import android.os.IBinder;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,21 +18,21 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.lalov.hitmonchance.Pokemon;
 import com.lalov.hitmonchance.PokemonAdaptor;
+import com.lalov.hitmonchance.PokemonService;
 import com.lalov.hitmonchance.R;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+
+import static com.lalov.hitmonchance.Globals.BROADCAST_RESULT;
+import static com.lalov.hitmonchance.Globals.SERVICE_TAG;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -43,10 +49,29 @@ public class MainActivity extends AppCompatActivity {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     DocumentReference docRef;
 
+    private ServiceConnection pokemonServiceConnection;
+    private PokemonService pokemonService;
+    private boolean bound = false;
+
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            InitUser();
+            pokemonAdaptor.notifyDataSetChanged();
+            Toast.makeText(MainActivity.this, "Pokemon updated", Toast.LENGTH_LONG).show(); //TODO Externalize
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        SetupConnectionToPokemonService();
+        BindToMovieService();
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver,
+                new IntentFilter(BROADCAST_RESULT));
 
         pokemonListView = (ListView) findViewById(R.id.ListViewPokedex);
         btnAddPokemon = findViewById(R.id.btnAdd);
@@ -55,16 +80,11 @@ public class MainActivity extends AppCompatActivity {
         txtUser = findViewById(R.id.textViewUser);
 
         docRef = db.collection("Users").document(currentUser.getUid());
-        SetUsername();
 
-        Pokemon p1 = new Pokemon(1,"Shit",1,"atk","atk2",20,1,1,1,1,1,1,true);
-        Pokemon p2 = new Pokemon(2,"Shit",1,"atk","atk2",20,1,1,1,1,1,1,true);
-        pokemonList = new ArrayList<>();
-        pokemonList.add(p1);
-        pokemonList.add(p2);
-        pokemonAdaptor = new PokemonAdaptor(this, pokemonList);
+        txtUser.setText(currentUser.getEmail());
 
         pokemonListView.setAdapter(pokemonAdaptor);
+
         pokemonListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
@@ -84,9 +104,72 @@ public class MainActivity extends AppCompatActivity {
         btnAddPokemon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AddPokemon();
+                pokemonService.AddPokemon(txtSearchPokemon.getText().toString());
+                txtSearchPokemon.getText().clear();
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        UnBindFromMovieService();
+    }
+
+    /** ########################################################################################
+     *  ######### Private methods ##############################################################
+     *  ######################################################################################## */
+
+    private void BindToMovieService() {
+        if (!bound) {
+            bindService(new Intent(MainActivity.this, PokemonService.class),
+                    pokemonServiceConnection, Context.BIND_AUTO_CREATE);
+            bound = true;
+        }
+    }
+
+    private void UnBindFromMovieService() {
+        if (bound) {
+            unbindService(pokemonServiceConnection);
+            bound = false;
+        }
+    }
+
+    private void SetupConnectionToPokemonService() {
+        pokemonServiceConnection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                pokemonService = ((PokemonService.PokemonServiceBinder)service).getService();
+                Log.d(SERVICE_TAG, "SignUpActivity connected to pokemon service");
+
+                InitUser();
+
+                //txtUser.setText(pokemonService.GetUsernameDatabase());
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+                pokemonService = null;
+                Log.d(SERVICE_TAG, "SignUpActivity disconnected from pokemon service");
+            }
+        };
+    }
+
+    private void InitUser() {
+        final Intent intent = getIntent();
+        if (intent.hasExtra("Username")) {
+            pokemonService.CreateUser(intent.getStringExtra("Username"));
+            pokemonService.AddPokemon(intent.getStringExtra("PokemonName"));
+            pokemonList = pokemonService.GetAllPokemon();
+            pokemonAdaptor = new PokemonAdaptor(this, pokemonList);
+            pokemonListView.setAdapter(pokemonAdaptor);
+        }
+        else {
+            pokemonList = pokemonService.GetAllPokemon();
+            pokemonAdaptor = new PokemonAdaptor(this, pokemonList);
+            pokemonListView.setAdapter(pokemonAdaptor);
+        }
 
     }
 
@@ -95,51 +178,4 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(MainActivity.this, LoginActivity.class));
         finish();
     }
-
-    private void AddPokemon() {
-        Map<String, Object> pokemon = new HashMap<>();
-        pokemon.put("#", 151);
-        pokemon.put("Name", txtSearchPokemon.getText().toString());
-
-        db.collection("Users").document(currentUser.getUid()).collection("Pokemon").document()
-                .set(pokemon)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "Success");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "Error");
-                    }
-                });
-
-        txtSearchPokemon.getText().clear();
-    }
-
-    private void SetUsername() {
-        docRef.get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if (documentSnapshot.exists()) {
-                            txtUser.setText(documentSnapshot.getString("Username"));
-                            Log.d(TAG, "SUCCESS: Got document snapshot");
-                        }
-                        else {
-                            txtUser.setText(currentUser.getEmail());
-                            Log.d(TAG, "ERROR: Could not get document snapshot");
-                        }
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "ERROR: Document was not found");
-                    }
-                });
-    }
-
 }

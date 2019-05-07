@@ -1,11 +1,9 @@
 package com.lalov.hitmonchance.Activities;
 
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,20 +11,14 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.lalov.hitmonchance.Pokemon;
 import com.lalov.hitmonchance.R;
 
-import java.util.HashMap;
-import java.util.Map;
+import static com.lalov.hitmonchance.Globals.REQUEST_CODE_SIGNUP;
 
 public class SignUpActivity extends AppCompatActivity {
-
-    private final static String TAG = "TAG123";
 
     RadioGroup radioGroupStarter;
     RadioButton radioButtonBulbasaur, radioButtonCharmander, radioButtonSquirtle;
@@ -66,6 +58,10 @@ public class SignUpActivity extends AppCompatActivity {
         });
     }
 
+    /** ########################################################################################
+     *  ######### Private methods ##############################################################
+     *  ######################################################################################## */
+
     private void SignUp() {
         if (TextUtils.isEmpty(txtUsername.getText())) {
             txtUsername.setError("Pls enter a username"); //TODO Externalize
@@ -76,52 +72,21 @@ public class SignUpActivity extends AppCompatActivity {
             return;
         }
 
-        Map<String, Object> pokemon = new HashMap<>();
-        pokemon.put("#", 1);
-        pokemon.put("Name", "Charmander"); //TODO Change pokemon to selected
+        String pokemonName;
+        if (radioButtonBulbasaur.isChecked())
+            pokemonName = "Bulbasaur";
+        else if (radioButtonCharmander.isChecked())
+            pokemonName = "Charmander";
+        else if (radioButtonSquirtle.isChecked())
+            pokemonName = "Squirtle";
+        else
+            pokemonName = "";
 
-        Map<String, Object> user = new HashMap<>();
-        user.put("Username", txtUsername.getText().toString());
-        user.put("uid", currentUser.getUid());
+        Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+        intent.putExtra("Username", txtUsername.getText().toString());
+        intent.putExtra("PokemonName", pokemonName);
 
-        Log.d(TAG, currentUser.getUid());
-
-        db.collection("Users").document(currentUser.getUid())
-                .set(user)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "User was added! Success!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "User was not added! Error!");
-                    }
-                });
-
-
-        db.collection("Users").document(currentUser.getUid()).collection("Pokemon").document()
-                .set(pokemon)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "Pokemon was added! Success!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "Pokemon was not added! Error!");
-                    }
-                }); 
-
-
-        startActivity(new Intent(SignUpActivity.this, MainActivity.class));
+        startActivityForResult(intent, REQUEST_CODE_SIGNUP);
         finish();
     }
-
-    //TODO Create method that gets the selected pokemon from the api
-
 }
