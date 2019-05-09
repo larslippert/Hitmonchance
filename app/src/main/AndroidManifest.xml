@@ -11,7 +11,8 @@
         android:roundIcon="@drawable/hitmonchance2"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".StatsActivity"></activity>
+        <activity android:name=".BattleActivity"></activity>
+        <activity android:name=".StatsActivity" />
         <activity android:name=".MainActivity" />
         <activity android:name=".LoginActivity">
             <intent-filter>
@@ -20,11 +21,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <service
             android:name=".PokemonService"
             android:enabled="true"
             android:exported="false" />
     </application>
-
 
 </manifest>
