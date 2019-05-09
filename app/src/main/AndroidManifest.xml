@@ -14,12 +14,9 @@
         android:theme="@style/AppTheme">
         <activity android:name=".Activities.SignUpActivity"></activity>
         <activity android:name=".Activities.StatsActivity" />
+        <activity android:name="Activities.BattleActivity"/>
         <activity android:name=".Activities.MainActivity" />
         <activity android:name=".Activities.LoginActivity">
-        <activity android:name=".BattleActivity"></activity>
-        <activity android:name=".StatsActivity" />
-        <activity android:name=".MainActivity" />
-        <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
