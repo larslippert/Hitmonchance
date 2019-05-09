@@ -14,6 +14,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".Activities.SignUpActivity"></activity>
         <activity android:name=".Activities.StatsActivity" />
+        <activity android:name="Activities.BattleActivity"/>
         <activity android:name=".Activities.MainActivity" />
         <activity android:name=".Activities.LoginActivity">
             <intent-filter>
@@ -22,6 +23,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <service
             android:name="PokemonService"
             android:enabled="true"
