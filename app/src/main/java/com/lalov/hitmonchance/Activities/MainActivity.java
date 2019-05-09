@@ -31,7 +31,8 @@ import com.lalov.hitmonchance.R;
 
 import java.util.ArrayList;
 
-import static com.lalov.hitmonchance.Globals.BROADCAST_RESULT;
+import static com.lalov.hitmonchance.Globals.BROADCAST_RESULT_POKEMON;
+import static com.lalov.hitmonchance.Globals.BROADCAST_RESULT_USERNAME;
 import static com.lalov.hitmonchance.Globals.SERVICE_TAG;
 
 public class MainActivity extends AppCompatActivity {
@@ -52,13 +53,21 @@ public class MainActivity extends AppCompatActivity {
     private ServiceConnection pokemonServiceConnection;
     private PokemonService pokemonService;
     private boolean bound = false;
+    private boolean newUser = true;
 
-    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+    private BroadcastReceiver broadcastReceiverPokemon = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             InitUser();
             pokemonAdaptor.notifyDataSetChanged();
             Toast.makeText(MainActivity.this, "Pokemon updated", Toast.LENGTH_LONG).show(); //TODO Externalize
+        }
+    };
+
+    private BroadcastReceiver broadcastReceiverUsername = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            txtUser.setText(intent.getStringExtra("Username"));
         }
     };
 
@@ -70,8 +79,11 @@ public class MainActivity extends AppCompatActivity {
         SetupConnectionToPokemonService();
         BindToMovieService();
 
-        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver,
-                new IntentFilter(BROADCAST_RESULT));
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiverPokemon,
+                new IntentFilter(BROADCAST_RESULT_POKEMON));
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiverUsername,
+                new IntentFilter(BROADCAST_RESULT_USERNAME));
 
         pokemonListView = (ListView) findViewById(R.id.ListViewPokedex);
         btnAddPokemon = findViewById(R.id.btnAdd);
@@ -80,8 +92,6 @@ public class MainActivity extends AppCompatActivity {
         txtUser = findViewById(R.id.textViewUser);
 
         docRef = db.collection("Users").document(currentUser.getUid());
-
-        txtUser.setText(currentUser.getEmail());
 
         pokemonListView.setAdapter(pokemonAdaptor);
 
@@ -143,9 +153,15 @@ public class MainActivity extends AppCompatActivity {
                 pokemonService = ((PokemonService.PokemonServiceBinder)service).getService();
                 Log.d(SERVICE_TAG, "SignUpActivity connected to pokemon service");
 
-                InitUser();
+                final Intent intent = getIntent(); //TODO This might cause problems later
+                if (intent.hasExtra("Username") && newUser) {
+                    pokemonService.CreateUser(intent.getStringExtra("Username"));
+                    pokemonService.AddPokemon(intent.getStringExtra("PokemonName"));
+                }
 
-                //txtUser.setText(pokemonService.GetUsernameDatabase());
+                newUser = false;
+
+                //InitUser();
             }
 
             @Override
@@ -157,20 +173,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void InitUser() {
-        final Intent intent = getIntent();
-        if (intent.hasExtra("Username")) {
-            pokemonService.CreateUser(intent.getStringExtra("Username"));
-            pokemonService.AddPokemon(intent.getStringExtra("PokemonName"));
-            pokemonList = pokemonService.GetAllPokemon();
-            pokemonAdaptor = new PokemonAdaptor(this, pokemonList);
-            pokemonListView.setAdapter(pokemonAdaptor);
-        }
-        else {
-            pokemonList = pokemonService.GetAllPokemon();
-            pokemonAdaptor = new PokemonAdaptor(this, pokemonList);
-            pokemonListView.setAdapter(pokemonAdaptor);
-        }
-
+        pokemonList = pokemonService.GetAllPokemon();
+        pokemonAdaptor = new PokemonAdaptor(this, pokemonList);
+        pokemonListView.setAdapter(pokemonAdaptor);
     }
 
     private void SignOut() {
