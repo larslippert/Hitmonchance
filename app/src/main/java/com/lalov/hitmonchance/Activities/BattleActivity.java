@@ -142,7 +142,7 @@ public class BattleActivity extends AppCompatActivity {
             txtWinner.setText(getResources().getString(R.string.win));
         }else if(UserStats<EnemyStats){
             txtWinner.setTextColor(Color.RED);
-            txtWinner.setText(getResources().getString(R.string.loose));
+            txtWinner.setText(getResources().getString(R.string.lose));
         }else{
             txtWinner.setTextColor(Color.BLUE);
             txtWinner.setText(getResources().getString(R.string.tie));

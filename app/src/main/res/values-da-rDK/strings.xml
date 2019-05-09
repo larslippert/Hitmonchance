@@ -21,11 +21,8 @@
     <string name="charmander">Charmander</string>
     <string name="bulbasaur">Bulbasaur</string>
     <string name="createuser">Opret din bruger</string>
-    <string name="gotopokedex">Gå til pokedex</string>
     <string name="win">Du vandt!</string>
-    <string name="loose">Du Tabte...</string>
+    <string name="lose">Du Tabte...</string>
     <string name="gotopokedex">Gå til pokedex</string>
-    <string name="win">Du vinder!</string>
-    <string name="loose">Du table..</string>
     <string name="tie">I var lige stærke!</string>
 </resources>
