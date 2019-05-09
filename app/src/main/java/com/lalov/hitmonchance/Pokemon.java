@@ -14,12 +14,6 @@ public class Pokemon implements Serializable {
     private long spdefense;
     private long speed;
 
-
-    //@PrimaryKey(autoGenerate = true)
-    //private int uid;
-
-    //public Pokemon(){
-    //}
     public Pokemon(long Id,String Name,String Type1, long Speed, long Spdefense, long Spattack, long Defense, long Attack, long Hp){
         this.id = Id;
         this.name = Name;

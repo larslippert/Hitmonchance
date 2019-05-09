@@ -19,4 +19,10 @@
     <string name="charmander">Charmander</string>
     <string name="bulbasaur">Bulbasaur</string>
     <string name="createuser">Create your user</string>
+    <string name="totalstats">Total stats:</string>
+    <string name="gotopokedex">Go to pokedex</string>
+    <string name="win">You win!</string>
+    <string name="loose">You loose...</string>
+    <string name="win">You win!</string>
+    <string name="tie">Even steven!</string>
 </resources>
