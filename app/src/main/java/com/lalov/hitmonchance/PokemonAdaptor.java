@@ -62,8 +62,11 @@ public class PokemonAdaptor extends BaseAdapter {
             ImageView adaptorStatus = (ImageView) convertView.findViewById(R.id.imageViewStatus);
             adaptorStatus.setImageResource(R.drawable.pokeball_black);
 
-            TextView adaptorName = (TextView) convertView.findViewById(R.id.textViewName);
+            TextView adaptorName = (TextView) convertView.findViewById(R.id.txtName);
             adaptorName.setText(context.getResources().getString(R.string.name)+ " " +pokemon.getName());
+
+            TextView adaptorLevel = (TextView) convertView.findViewById(R.id.txtDexNo);
+            adaptorLevel.setText(context.getResources().getString(R.string.level)+" "+String.valueOf(pokemon.getLevel()));
         }
         return convertView;
     }
