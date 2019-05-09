@@ -12,9 +12,12 @@
         android:roundIcon="@drawable/hitmonchancelogo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities.SignUpActivity"></activity>
+        <activity android:name=".Activities.ChooseOpponent"
+            android:theme="@style/AppTheme.Popup"
+            ></activity>
+        <activity android:name=".Activities.SignUpActivity" />
         <activity android:name=".Activities.StatsActivity" />
-        <activity android:name="Activities.BattleActivity"/>
+        <activity android:name=".Activities.BattleActivity" />
         <activity android:name=".Activities.MainActivity" />
         <activity android:name=".Activities.LoginActivity">
             <intent-filter>
@@ -25,7 +28,7 @@
         </activity>
 
         <service
-            android:name="PokemonService"
+            android:name=".PokemonService"
             android:enabled="true"
             android:exported="false" />
     </application>

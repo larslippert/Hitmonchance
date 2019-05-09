@@ -18,7 +18,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -36,6 +35,8 @@ import static com.lalov.hitmonchance.Globals.BROADCAST_RESULT_USERNAME;
 import static com.lalov.hitmonchance.Globals.SERVICE_TAG;
 
 public class MainActivity extends AppCompatActivity {
+
+    //TODO Error where pokemon is added to list twice
 
     private static final String TAG = "Tag123";
     private PokemonAdaptor pokemonAdaptor;
@@ -58,16 +59,15 @@ public class MainActivity extends AppCompatActivity {
     private BroadcastReceiver broadcastReceiverPokemon = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            InitUser();
+            InitPokemon();
             pokemonAdaptor.notifyDataSetChanged();
-            Toast.makeText(MainActivity.this, "Pokemon updated", Toast.LENGTH_LONG).show(); //TODO Externalize
         }
     };
 
     private BroadcastReceiver broadcastReceiverUsername = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            txtUser.setText(intent.getStringExtra("Username"));
+            txtUser.setText(pokemonService.GetUsername());
         }
     };
 
@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
 
         docRef = db.collection("Users").document(currentUser.getUid());
 
-        pokemonListView.setAdapter(pokemonAdaptor);
+        //pokemonListView.setAdapter(pokemonAdaptor);
 
         pokemonListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -101,6 +101,16 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), StatsActivity.class);
                 startActivity(intent);
                 return true;
+            }
+        });
+
+        pokemonListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getApplicationContext(), ChooseOpponent.class);
+                intent.putExtra("position", position);
+
+                startActivity(intent);
             }
         });
 
@@ -152,9 +162,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
                 pokemonService = ((PokemonService.PokemonServiceBinder)service).getService();
-                Log.d(SERVICE_TAG, "SignUpActivity connected to pokemon service");
+                Log.d(SERVICE_TAG, "MainActivity connected to pokemon service");
 
-                final Intent intent = getIntent(); //TODO This might cause problems later
+                final Intent intent = getIntent(); //TODO This might cause problems later, should be changed
                 if (intent.hasExtra("Username") && newUser) {
                     pokemonService.CreateUser(intent.getStringExtra("Username"));
                     pokemonService.AddPokemon(intent.getStringExtra("PokemonName"));
@@ -162,18 +172,18 @@ public class MainActivity extends AppCompatActivity {
 
                 newUser = false;
 
-                //InitUser();
+                //InitPokemon();
             }
 
             @Override
             public void onServiceDisconnected(ComponentName name) {
                 pokemonService = null;
-                Log.d(SERVICE_TAG, "SignUpActivity disconnected from pokemon service");
+                Log.d(SERVICE_TAG, "MainActivity disconnected from pokemon service");
             }
         };
     }
 
-    private void InitUser() {
+    private void InitPokemon() {
         pokemonList = pokemonService.GetAllPokemon();
         pokemonAdaptor = new PokemonAdaptor(this, pokemonList);
         pokemonListView.setAdapter(pokemonAdaptor);

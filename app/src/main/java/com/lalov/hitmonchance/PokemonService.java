@@ -32,11 +32,13 @@ import com.lalov.hitmonchance.PokeAPI.PokeAPI;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.lalov.hitmonchance.Globals.API_CONNECTION_TAG;
 import static com.lalov.hitmonchance.Globals.BROADCAST_RESULT_POKEMON;
 import static com.lalov.hitmonchance.Globals.BROADCAST_RESULT_USERNAME;
+import static com.lalov.hitmonchance.Globals.BROADCAST_RESULT_USERS;
 import static com.lalov.hitmonchance.Globals.FIRESTORE_TAG;
 import static com.lalov.hitmonchance.Globals.POKE_API_CALL;
 
@@ -45,11 +47,13 @@ public class PokemonService extends Service {
     private Context mContext;
     private ArrayList<Pokemon> pokemonList;
     private String username;
+    private ArrayList<String> userList;
     private RequestQueue requestQueue;
 
     private final IBinder binder = new PokemonServiceBinder();
     private LocalBroadcastManager bmPokemon;
     private LocalBroadcastManager bmUsername;
+    private LocalBroadcastManager bmUsers;
 
     private FirebaseUser currentUser;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -71,9 +75,11 @@ public class PokemonService extends Service {
 
         bmPokemon = LocalBroadcastManager.getInstance(this);
         bmUsername = LocalBroadcastManager.getInstance(this);
+        bmUsers = LocalBroadcastManager.getInstance(this);
 
         GetAllPokemonDatabase();
         GetUsernameDatabase();
+        GetAllUsersDatabse();
     }
 
     @Override
@@ -96,7 +102,6 @@ public class PokemonService extends Service {
         AddUserDatabase(username);
     }
 
-
     public ArrayList<Pokemon> GetAllPokemon() {
         return pokemonList;
     }
@@ -104,6 +109,8 @@ public class PokemonService extends Service {
     public String GetUsername() {
         return username;
     }
+
+    public ArrayList<String> GetAllUsers() { return userList; }
 
     /** ########################################################################################
      *  ######### API CALL #####################################################################
@@ -250,15 +257,6 @@ public class PokemonService extends Service {
                         if (task.isSuccessful()) {
                             if (task.getResult() != null) {
                                 for (QueryDocumentSnapshot document : task.getResult()) {
-                                    /*
-                                    String name = (String) document.getData().get("Name");
-                                    String capsName = name.substring(0, 1).toUpperCase() + name.substring(1);
-
-                                    String type2 = "";
-                                    if (document.getData().get("Type2") != null)
-                                        type2 = (String) document.getData().get("Type2");
-                                        */
-
                                     pokemonList.add(new Pokemon(
                                             (long) document.getData().get("#"),
                                             (String) document.getData().get("Name"),
@@ -271,11 +269,35 @@ public class PokemonService extends Service {
                                             (long) document.getData().get("Attack"),
                                             (long) document.getData().get("HP")
                                     ));
-                                    Intent intent = new Intent(BROADCAST_RESULT_POKEMON);
-                                    intent.putExtra("pokemonList", pokemonList);
-
-                                    bmPokemon.sendBroadcast(intent);
                                 }
+                                Intent intent = new Intent(BROADCAST_RESULT_POKEMON);
+                                intent.putExtra("pokemonList", pokemonList);
+
+                                bmPokemon.sendBroadcast(intent);
+                            }
+                        }
+                    }
+                });
+    }
+
+    private void GetAllUsersDatabse() {
+        userList = new ArrayList<String>();
+
+        db.collection("Users").get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            if (task.getResult() != null) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    if (!document.getData().get("uid").equals(currentUser.getUid())) {
+                                        userList.add((String) document.getData().get("Username"));
+                                    }
+                                }
+                                Intent intent = new Intent(BROADCAST_RESULT_USERS);
+                                intent.putExtra("userList", userList);
+
+                                bmUsers.sendBroadcast(intent);
                             }
                         }
                     }
