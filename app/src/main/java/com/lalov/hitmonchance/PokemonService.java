@@ -94,10 +94,11 @@ public class PokemonService extends Service {
         AddUserDatabase(username);
     }
 
+
     public ArrayList<Pokemon> GetAllPokemon() {
-        GetAllPokemonDatabase();
         return pokemonList;
     }
+
 
     /*
     public String GetUsername() {
@@ -248,6 +249,10 @@ public class PokemonService extends Service {
                                             (long) document.getData().get("Attack"),
                                             (long) document.getData().get("HP")
                                     ));
+                                    Intent intent = new Intent(BROADCAST_RESULT);
+                                    intent.putExtra("pokemonList", pokemonList);
+
+                                    bm.sendBroadcast(intent);
                                 }
                             }
                         }
