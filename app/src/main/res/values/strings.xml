@@ -9,8 +9,14 @@
     <string name="pokedex">Pokedex</string>
     <string name="add">Add pokemon to pokedex</string>
     <string name="name">Name:</string>
-    <string name="level">Level:</string>
-    <string name="textViewName">Name</string>
-    <string name="textViewLevel">Level</string>
     <string name="Logout">Logout</string>
+    <string name="txtHP">HP</string>
+    <string name="txtHPStat">Stat</string>
+    <string name="txtAttack">Attack</string>
+    <string name="txtDefense">Defense</string>
+    <string name="txtSpAtk">Sp. Attack</string>
+    <string name="txtSpDef">Sp. Def</string>
+    <string name="txtSpeed">Speed</string>
+    <string name="txtDexNo">Dex No:</string>
+    <string name="txtName">Name:</string>
 </resources>

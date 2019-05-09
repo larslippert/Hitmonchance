@@ -7,7 +7,7 @@
     tools:context=".StatsActivity">
 
     <TextView
-        android:id="@+id/textViewLevel"
+        android:id="@+id/txtDexNo"
         android:layout_width="97dp"
         android:layout_height="23dp"
         android:layout_marginStart="44dp"
@@ -15,11 +15,11 @@
         android:layout_marginTop="12dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:text="@string/textViewLevel"
+        android:text="@string/txtDexNo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.019"
         app:layout_constraintStart_toEndOf="@+id/imageView"
-        app:layout_constraintTop_toBottomOf="@+id/textViewName" />
+        app:layout_constraintTop_toBottomOf="@+id/txtName" />
 
     <ImageView
         android:id="@+id/imageView"
@@ -34,7 +34,7 @@
 
 
     <TextView
-        android:id="@+id/textViewName"
+        android:id="@+id/txtName"
         android:layout_width="117dp"
         android:layout_height="23dp"
         android:layout_marginStart="44dp"
@@ -42,71 +42,160 @@
         android:layout_marginTop="44dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:text="@string/textViewName"
+        android:text="@string/txtName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.022"
         app:layout_constraintStart_toEndOf="@+id/imageView"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TableLayout
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="378dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginLeft="30dp"
+        android:layout_marginStart="25dp"
+        android:layout_marginLeft="25dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="30dp"
-        android:layout_marginRight="30dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginRight="25dp"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.473"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewLevel">
+        app:layout_constraintTop_toBottomOf="@+id/txtDexNo">
 
         <TableRow
+            android:background="@drawable/table_row_bg"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:padding="15dp"
+            >
 
             <TextView
-                android:id="@+id/textView9"
-                android:layout_width="187dp"
-                android:layout_height="40dp"
-                android:text="TextView"
-                tools:layout_editor_absoluteX="17dp"
-                tools:layout_editor_absoluteY="248dp" />
-
-            <TextView
-                android:id="@+id/textView13"
-                android:layout_width="189dp"
-                android:layout_height="40dp"
-                android:text="TextView" />
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:id="@+id/textView14"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="TextView" />
-
-            <TextView
-                android:id="@+id/textView15"
+                android:id="@+id/txtHP"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="TextView" />
+                android:background="@drawable/table_cell_bg"
+                android:paddingRight="135dp"
+                android:text="@string/txtHP" />
 
+            <TextView
+                android:id="@+id/txtHPStat"
+                android:layout_width="192dp"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp" />
+        </TableRow>
+
+
+        <TableRow
+            android:background="@drawable/table_row_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="15dp"
+            >
+
+            <TextView
+                android:id="@+id/txtAttack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/table_cell_bg"
+                android:paddingRight="10dp"
+                android:text="@string/txtAttack" />
+
+            <TextView
+                android:id="@+id/txtAttackStat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp" />
         </TableRow>
 
         <TableRow
+            android:background="@drawable/table_row_bg"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:padding="15dp"
+            >
+
+            <TextView
+                android:id="@+id/txtDefense"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/table_cell_bg"
+                android:paddingRight="10dp"
+                android:text="@string/txtDefense" />
+
+            <TextView
+                android:id="@+id/txtDefenseStat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp" />
+        </TableRow>
 
         <TableRow
+            android:background="@drawable/table_row_bg"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:padding="15dp"
+            >
+
+            <TextView
+                android:id="@+id/txtSpAtk"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/table_cell_bg"
+                android:paddingRight="10dp"
+                android:text="@string/txtSpAtk" />
+
+            <TextView
+                android:id="@+id/txtSpAtkStat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp" />
+        </TableRow>
+
+        <TableRow
+            android:background="@drawable/table_row_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="15dp"
+            >
+
+            <TextView
+                android:id="@+id/txtSpDef"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/table_cell_bg"
+                android:paddingRight="10dp"
+                android:text="@string/txtSpDef" />
+
+            <TextView
+                android:id="@+id/txtSpDefStat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp" />
+        </TableRow>
+
+        <TableRow
+            android:background="@drawable/last_row_border"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="15dp"
+            >
+
+            <TextView
+                android:id="@+id/txtSpeed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/table_cell_bg"
+                android:paddingRight="10dp"
+                android:text="@string/txtSpeed" />
+
+            <TextView
+                android:id="@+id/txtSpeedStat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp" />
+        </TableRow>
+
     </TableLayout>
 
 
