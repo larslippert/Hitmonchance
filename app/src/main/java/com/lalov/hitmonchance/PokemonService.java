@@ -154,14 +154,18 @@ public class PokemonService extends Service {
             String type1 = pokeAPI.getTypes().get(0).getType().getName();
             String type2 = "";
 
-            if (pokeAPI.getTypes().get(1) != null) { //TODO Null object
+            if (pokeAPI.getTypes().size() == 2) {
                 type1 = pokeAPI.getTypes().get(1).getType().getName();
                 type2 = pokeAPI.getTypes().get(0).getType().getName();
             }
 
+            Log.d(API_CONNECTION_TAG, "Name before: " + pokeAPI.getName());
+            String name = pokeAPI.getName().substring(0,1).toUpperCase() + pokeAPI.getName().substring(1);
+            Log.d(API_CONNECTION_TAG, "Name after: " + name);
+
             Pokemon pokemon = new Pokemon(
                     pokeAPI.getId(),
-                    pokeAPI.getName(),
+                    name,
                     type1,
                     type2,
                     pokeAPI.getStats().get(0).getBaseStat(),
@@ -246,18 +250,20 @@ public class PokemonService extends Service {
                         if (task.isSuccessful()) {
                             if (task.getResult() != null) {
                                 for (QueryDocumentSnapshot document : task.getResult()) {
+                                    /*
                                     String name = (String) document.getData().get("Name");
                                     String capsName = name.substring(0, 1).toUpperCase() + name.substring(1);
 
                                     String type2 = "";
                                     if (document.getData().get("Type2") != null)
                                         type2 = (String) document.getData().get("Type2");
+                                        */
 
                                     pokemonList.add(new Pokemon(
                                             (long) document.getData().get("#"),
-                                            capsName,
+                                            (String) document.getData().get("Name"),
                                             (String) document.getData().get("Type1"),
-                                            type2,
+                                            (String) document.getData().get("Type2"),
                                             (long) document.getData().get("Speed"),
                                             (long) document.getData().get("SpDefense"),
                                             (long) document.getData().get("SpAttack"),

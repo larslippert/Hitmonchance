@@ -114,7 +114,8 @@ public class MainActivity extends AppCompatActivity {
         btnAddPokemon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pokemonService.AddPokemon(txtSearchPokemon.getText().toString());
+                String pokemonName = txtSearchPokemon.getText().toString().toLowerCase();
+                pokemonService.AddPokemon(pokemonName);
                 txtSearchPokemon.getText().clear();
             }
         });
