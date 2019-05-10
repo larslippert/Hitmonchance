@@ -72,6 +72,7 @@ public class BattleActivity extends AppCompatActivity {
                 //int icon = adaptor.findIconFormovie(movieService.getMovie(getIntent.getIntExtra("Position",0)));
                 Pokemon usersSelectedPokemon = pokemonService.GetPokemon(getIntent.getIntExtra("Position",0));
                 Pokemon enemiesSelectedPokemon = pokemonService.GetPokemon(getIntent.getIntExtra("Position",0));
+
                 getselectedPokemon(usersSelectedPokemon,true);
                 getselectedPokemon(enemiesSelectedPokemon,false);
                 determinateWinner(calculateTotalStats(usersSelectedPokemon),calculateTotalStats(enemiesSelectedPokemon));

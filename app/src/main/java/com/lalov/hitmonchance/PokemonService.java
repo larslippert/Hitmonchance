@@ -3,6 +3,7 @@ package com.lalov.hitmonchance;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.IBinder;
@@ -48,6 +49,8 @@ public class PokemonService extends Service {
     private String username;
     private RequestQueue requestQueue;
 
+    MediaPlayer mediaPlayer;
+
     private final IBinder binder = new PokemonServiceBinder();
     private LocalBroadcastManager bm;
 
@@ -65,13 +68,15 @@ public class PokemonService extends Service {
     public void onCreate() {
         super.onCreate();
         mContext = this;
-
+        mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.Pokemon_danish_introsong);
+        mediaPlayer.start();
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         docRef = db.collection("Users").document(currentUser.getUid());
 
         bm = LocalBroadcastManager.getInstance(this);
 
         GetAllPokemonDatabase();
+
     }
 
     @Override
@@ -86,6 +91,8 @@ public class PokemonService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        mediaPlayer.stop();
+        mediaPlayer.release();
     }
 
     public Pokemon GetPokemon(int position) {return pokemonList.get(position); }
