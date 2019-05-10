@@ -32,4 +32,5 @@
     <string name="tie">This is never an option...!</string>
     <string name="totalstats">Total stats:</string>
     <string name="choose_opponent">Choose Opponent</string>
+    <string name="battle">Battle!</string>
 </resources>

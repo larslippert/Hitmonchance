@@ -34,9 +34,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import static com.lalov.hitmonchance.Globals.API_CONNECTION_TAG;
 import static com.lalov.hitmonchance.Globals.BROADCAST_RESULT_POKEMON;
+import static com.lalov.hitmonchance.Globals.BROADCAST_RESULT_RANDOM_POKEMON;
 import static com.lalov.hitmonchance.Globals.BROADCAST_RESULT_USERNAME;
 import static com.lalov.hitmonchance.Globals.BROADCAST_RESULT_USERS;
 import static com.lalov.hitmonchance.Globals.FIRESTORE_TAG;
@@ -46,14 +48,17 @@ public class PokemonService extends Service {
 
     private Context mContext;
     private ArrayList<Pokemon> pokemonList;
+    private Pokemon opponentPokemon;
     private String username;
     private ArrayList<String> userList;
+    private ArrayList<String> uidList;
     private RequestQueue requestQueue;
 
     private final IBinder binder = new PokemonServiceBinder();
     private LocalBroadcastManager bmPokemon;
     private LocalBroadcastManager bmUsername;
     private LocalBroadcastManager bmUsers;
+    private LocalBroadcastManager bmRandomPokemon;
 
     private FirebaseUser currentUser;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -76,6 +81,7 @@ public class PokemonService extends Service {
         bmPokemon = LocalBroadcastManager.getInstance(this);
         bmUsername = LocalBroadcastManager.getInstance(this);
         bmUsers = LocalBroadcastManager.getInstance(this);
+        bmRandomPokemon = LocalBroadcastManager.getInstance(this);
 
         GetAllPokemonDatabase();
         GetUsernameDatabase();
@@ -112,10 +118,13 @@ public class PokemonService extends Service {
 
     public ArrayList<String> GetAllUsers() { return userList; }
 
+    public String GetUserId(int position) { return uidList.get(position); }
+
+    public Pokemon GetOpponentPokemon() { return opponentPokemon; }
+
     /** ########################################################################################
      *  ######### API CALL #####################################################################
      *  ######################################################################################## */
-
 
     public void AddPokemon(String name) {
         String url = POKE_API_CALL + name;
@@ -166,9 +175,7 @@ public class PokemonService extends Service {
                 type2 = pokeAPI.getTypes().get(0).getType().getName();
             }
 
-            Log.d(API_CONNECTION_TAG, "Name before: " + pokeAPI.getName());
             String name = pokeAPI.getName().substring(0,1).toUpperCase() + pokeAPI.getName().substring(1);
-            Log.d(API_CONNECTION_TAG, "Name after: " + name);
 
             Pokemon pokemon = new Pokemon(
                     pokeAPI.getId(),
@@ -270,10 +277,61 @@ public class PokemonService extends Service {
                                             (long) document.getData().get("HP")
                                     ));
                                 }
+
                                 Intent intent = new Intent(BROADCAST_RESULT_POKEMON);
                                 intent.putExtra("pokemonList", pokemonList);
 
                                 bmPokemon.sendBroadcast(intent);
+
+                            }
+                        }
+                    }
+                });
+    }
+
+    public void GetRandomPokemonDatabase(String uid) {
+        db.collection("Users").document(uid).collection("Pokemon").get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            if (task.getResult() != null) {
+                                int numberOfPokemon = task.getResult().size();
+                                Random rand = new Random();
+                                int chosenPokemon = 0;
+
+                                if (numberOfPokemon > 1) {
+                                    chosenPokemon = rand.nextInt(numberOfPokemon);
+                                }
+
+                                int counter = 0;
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    if (counter == chosenPokemon) {
+                                        opponentPokemon = new Pokemon(
+                                                (long) document.getData().get("#"),
+                                                (String) document.getData().get("Name"),
+                                                (String) document.getData().get("Type1"),
+                                                (String) document.getData().get("Type2"),
+                                                (long) document.getData().get("Speed"),
+                                                (long) document.getData().get("SpDefense"),
+                                                (long) document.getData().get("SpAttack"),
+                                                (long) document.getData().get("Defense"),
+                                                (long) document.getData().get("Attack"),
+                                                (long) document.getData().get("HP")
+                                        );
+
+                                        break;
+                                    }
+
+                                    counter++;
+                                }
+
+                                if (opponentPokemon != null) {
+                                    Intent intent = new Intent(BROADCAST_RESULT_RANDOM_POKEMON);
+                                    intent.putExtra("pokemon", opponentPokemon);
+
+                                    bmRandomPokemon.sendBroadcast(intent);
+                                }
                             }
                         }
                     }
@@ -282,6 +340,7 @@ public class PokemonService extends Service {
 
     private void GetAllUsersDatabse() {
         userList = new ArrayList<String>();
+        uidList = new ArrayList<String>();
 
         db.collection("Users").get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -292,6 +351,7 @@ public class PokemonService extends Service {
                                 for (QueryDocumentSnapshot document : task.getResult()) {
                                     if (!document.getData().get("uid").equals(currentUser.getUid())) {
                                         userList.add((String) document.getData().get("Username"));
+                                        uidList.add((String) document.getData().get("uid"));
                                     }
                                 }
                                 Intent intent = new Intent(BROADCAST_RESULT_USERS);
