@@ -117,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getApplicationContext(), StatsActivity.class);
+                intent.putExtra("position", position);
                 startActivity(intent);
                 return true;
             }
