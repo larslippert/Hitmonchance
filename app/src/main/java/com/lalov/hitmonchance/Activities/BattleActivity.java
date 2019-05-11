@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
@@ -46,6 +47,7 @@ public class BattleActivity extends AppCompatActivity {
             InitPokemon();
         }
     };
+    MediaPlayer pokemonBattleSong;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +69,8 @@ public class BattleActivity extends AppCompatActivity {
         btnBattle = findViewById(R.id.btnBattle);
         imgUser = findViewById(R.id.imageViewUserPokemon);
         imgEnemy = findViewById(R.id.imageViewEnemyPokemon);
+        pokemonBattleSong = MediaPlayer.create(getApplicationContext(), R.raw.battle_music);
+        pokemonBattleSong.start();
 
         btnGoToPokedex.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -190,5 +194,12 @@ public class BattleActivity extends AppCompatActivity {
             txtWinner.setTextColor(Color.RED);
             txtWinner.setText(getResources().getString(R.string.lose));
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        pokemonBattleSong.stop();
+        pokemonBattleSong.release();
     }
 }

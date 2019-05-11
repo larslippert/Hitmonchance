@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.location.Location;
+import android.media.MediaPlayer;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
@@ -62,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
     private Location userLocation;
     private Location battleLocation;
     private String battleTime;
+    MediaPlayer pokemonIntroSong;
 
     private BroadcastReceiver broadcastReceiverPokemon = new BroadcastReceiver() {
         @Override
@@ -145,6 +147,10 @@ public class MainActivity extends AppCompatActivity {
                 txtSearchPokemon.getText().clear();
             }
         });
+
+        pokemonIntroSong = MediaPlayer.create(getApplicationContext(), R.raw.pokemon_danish_introsong);
+
+        pokemonIntroSong.start();
     }
 
     @Override
@@ -211,5 +217,12 @@ public class MainActivity extends AppCompatActivity {
         FirebaseAuth.getInstance().signOut();
         startActivity(new Intent(MainActivity.this, LoginActivity.class));
         finish();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        pokemonIntroSong.stop();
+        pokemonIntroSong.release();
     }
 }
