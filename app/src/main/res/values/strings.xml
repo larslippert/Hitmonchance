@@ -19,10 +19,17 @@
     <string name="charmander">Charmander</string>
     <string name="bulbasaur">Bulbasaur</string>
     <string name="createuser">Create your user</string>
-    <string name="totalstats">Total stats:</string>
+    <string name="txtHP">HP</string>
+    <string name="txtAttack">Attack</string>
+    <string name="txtDefense">Defense</string>
+    <string name="txtSpAtk">Sp. Attack</string>
+    <string name="txtSpDef">Sp. Defense</string>
+    <string name="txtSpeed">Speed</string>
+    <string name="txtDexNo">Dex No:</string>
+    <string name="win">You won</string>
+    <string name="lose">You lost...</string>
     <string name="gotopokedex">Go to pokedex</string>
-    <string name="win">You win!</string>
-    <string name="loose">You loose...</string>
-    <string name="win">You win!</string>
-    <string name="tie">Even steven!</string>
+    <string name="tie">This is never an option...!</string>
+    <string name="totalstats">Total stats:</string>
+    <string name="choose_opponent">Choose Opponent</string>
 </resources>

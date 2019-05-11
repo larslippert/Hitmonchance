@@ -1,0 +1,9 @@
+diff a/app/src/main/java/com/lalov/hitmonchance/PokemonService.java b/app/src/main/java/com/lalov/hitmonchance/PokemonService.java	(rejected hunks)
+@@ -68,7 +68,6 @@
+     public void onCreate() {
+         super.onCreate();
+         mContext = this;
+-
+         mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.Pokemon_danish_introsong);
+         mediaPlayer.start();
+         currentUser = FirebaseAuth.getInstance().getCurrentUser();

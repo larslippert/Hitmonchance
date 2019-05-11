@@ -9,16 +9,16 @@
     <ListView
         android:id="@+id/ListViewPokedex"
         android:layout_width="0dp"
-        android:layout_height="361dp"
+        android:layout_height="401dp"
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
+        android:layout_marginBottom="50dp"
+        app:layout_constraintBottom_toTopOf="@+id/editTextAdd"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewPokedex" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/textViewPokedex"
@@ -26,17 +26,17 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="75dp"
         android:layout_marginLeft="75dp"
-        android:layout_marginTop="24dp"
         android:layout_marginEnd="160dp"
         android:layout_marginRight="160dp"
+        android:layout_marginBottom="7dp"
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:text="@string/pokedex"
         android:textColor="@color/colorRedPokedex"
         android:textSize="22sp"
+        app:layout_constraintBottom_toTopOf="@+id/ListViewPokedex"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/imgBtnLogout"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toEndOf="@+id/imgBtnLogout" />
 
     <Button
         android:id="@+id/btnAdd"
@@ -44,17 +44,16 @@
         android:layout_height="46dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="42dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginBottom="12dp"
+        android:layout_marginBottom="24dp"
         android:background="@color/colorRedPokedex"
         android:text="@string/add"
         android:textColor="@android:color/background_light"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextAdd" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
         android:id="@+id/editTextAdd"
@@ -62,16 +61,16 @@
         android:layout_height="47dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="88dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
+        android:layout_marginBottom="30dp"
         android:ems="10"
         android:hint="@string/add"
         android:inputType="text"
+        app:layout_constraintBottom_toTopOf="@+id/btnAdd"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ListViewPokedex" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ImageButton
         android:id="@+id/imgBtnLogout"
@@ -79,9 +78,10 @@
         android:layout_height="28dp"
         android:layout_marginStart="5dp"
         android:layout_marginLeft="5dp"
+        android:layout_marginBottom="12dp"
         android:background="@android:color/transparent"
+        app:layout_constraintBottom_toTopOf="@+id/ListViewPokedex"
         app:layout_constraintStart_toEndOf="@+id/textViewLogout"
-        app:layout_constraintTop_toBottomOf="@+id/textViewUser"
         app:srcCompat="@drawable/ic_exit_to_app_black_24dp" />
 
     <TextView
@@ -90,13 +90,12 @@
         android:layout_height="16dp"
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="4dp"
         android:layout_marginEnd="295dp"
         android:layout_marginRight="295dp"
         android:textSize="12sp"
+        app:layout_constraintBottom_toTopOf="@+id/imgBtnLogout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/textViewLogout"
@@ -104,11 +103,11 @@
         android:layout_height="20dp"
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginBottom="16dp"
         android:text="@string/Logout"
         android:textSize="12sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewUser" />
+        app:layout_constraintBottom_toTopOf="@+id/ListViewPokedex"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </android.support.constraint.ConstraintLayout>

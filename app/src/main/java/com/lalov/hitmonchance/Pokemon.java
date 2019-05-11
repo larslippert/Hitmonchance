@@ -14,10 +14,11 @@ public class Pokemon implements Serializable {
     private long spdefense;
     private long speed;
 
-    public Pokemon(long Id,String Name,String Type1, long Speed, long Spdefense, long Spattack, long Defense, long Attack, long Hp){
+    public Pokemon(long Id,String Name,String Type1, String Type2, long Speed, long Spdefense, long Spattack, long Defense, long Attack, long Hp){
         this.id = Id;
         this.name = Name;
         this.type1 = Type1;
+        this.type2 = Type2;
         this.hp = Hp;
         this.attack = Attack;
         this.defense = Defense;

@@ -38,7 +38,9 @@ import java.util.List;
 import java.util.Map;
 
 import static com.lalov.hitmonchance.Globals.API_CONNECTION_TAG;
-import static com.lalov.hitmonchance.Globals.BROADCAST_RESULT;
+import static com.lalov.hitmonchance.Globals.BROADCAST_RESULT_POKEMON;
+import static com.lalov.hitmonchance.Globals.BROADCAST_RESULT_USERNAME;
+import static com.lalov.hitmonchance.Globals.BROADCAST_RESULT_USERS;
 import static com.lalov.hitmonchance.Globals.FIRESTORE_TAG;
 import static com.lalov.hitmonchance.Globals.POKE_API_CALL;
 
@@ -47,12 +49,15 @@ public class PokemonService extends Service {
     private Context mContext;
     private ArrayList<Pokemon> pokemonList;
     private String username;
+    private ArrayList<String> userList;
     private RequestQueue requestQueue;
 
     MediaPlayer mediaPlayer;
 
     private final IBinder binder = new PokemonServiceBinder();
-    private LocalBroadcastManager bm;
+    private LocalBroadcastManager bmPokemon;
+    private LocalBroadcastManager bmUsername;
+    private LocalBroadcastManager bmUsers;
 
     private FirebaseUser currentUser;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -68,15 +73,23 @@ public class PokemonService extends Service {
     public void onCreate() {
         super.onCreate();
         mContext = this;
+
         mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.Pokemon_danish_introsong);
         mediaPlayer.start();
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         docRef = db.collection("Users").document(currentUser.getUid());
 
-        bm = LocalBroadcastManager.getInstance(this);
+        bmPokemon = LocalBroadcastManager.getInstance(this);
+        bmUsername = LocalBroadcastManager.getInstance(this);
+        bmUsers = LocalBroadcastManager.getInstance(this);
 
         GetAllPokemonDatabase();
+<<<<<<< HEAD
 
+=======
+        GetUsernameDatabase();
+        GetAllUsersDatabse();
+>>>>>>> master
     }
 
     @Override
@@ -101,18 +114,15 @@ public class PokemonService extends Service {
         AddUserDatabase(username);
     }
 
-
     public ArrayList<Pokemon> GetAllPokemon() {
         return pokemonList;
     }
 
-
-    /*
     public String GetUsername() {
-        GetUsernameDatabase();
         return username;
     }
-    */
+
+    public ArrayList<String> GetAllUsers() { return userList; }
 
     /** ########################################################################################
      *  ######### API CALL #####################################################################
@@ -131,8 +141,8 @@ public class PokemonService extends Service {
                     AddPokemonDatabase(pokemon);
                     pokemonList.add(pokemon);
 
-                    Intent broadcastIntent = new Intent(BROADCAST_RESULT);
-                    bm.sendBroadcast(broadcastIntent);
+                    Intent broadcastIntent = new Intent(BROADCAST_RESULT_POKEMON);
+                    bmPokemon.sendBroadcast(broadcastIntent);
 
                     Log.d(API_CONNECTION_TAG, "SUCCESS: Pokemon added");
                 }
@@ -143,7 +153,7 @@ public class PokemonService extends Service {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d(API_CONNECTION_TAG, "ERROR: API call failed");
+                Log.d(API_CONNECTION_TAG, "ERROR: API call failed with error: " + error);
             }
         });
 
@@ -160,10 +170,23 @@ public class PokemonService extends Service {
         PokeAPI pokeAPI = gson.fromJson(jsonResponse, PokeAPI.class);
 
         if (pokeAPI != null) {
+            String type1 = pokeAPI.getTypes().get(0).getType().getName();
+            String type2 = "";
+
+            if (pokeAPI.getTypes().size() == 2) {
+                type1 = pokeAPI.getTypes().get(1).getType().getName();
+                type2 = pokeAPI.getTypes().get(0).getType().getName();
+            }
+
+            Log.d(API_CONNECTION_TAG, "Name before: " + pokeAPI.getName());
+            String name = pokeAPI.getName().substring(0,1).toUpperCase() + pokeAPI.getName().substring(1);
+            Log.d(API_CONNECTION_TAG, "Name after: " + name);
+
             Pokemon pokemon = new Pokemon(
                     pokeAPI.getId(),
-                    pokeAPI.getName(),
-                    pokeAPI.getTypes().get(0).getType().getName(),
+                    name,
+                    type1,
+                    type2,
                     pokeAPI.getStats().get(0).getBaseStat(),
                     pokeAPI.getStats().get(1).getBaseStat(),
                     pokeAPI.getStats().get(2).getBaseStat(),
@@ -212,6 +235,7 @@ public class PokemonService extends Service {
         _pokemon.put("#", pokemon.getId());
         _pokemon.put("Name", pokemon.getName());
         _pokemon.put("Type1", pokemon.getType1());
+        _pokemon.put("Type2", pokemon.getType2());
         _pokemon.put("Speed", pokemon.getSpeed());
         _pokemon.put("SpDefense", pokemon.getSpdefense());
         _pokemon.put("SpAttack", pokemon.getSpattack());
@@ -235,7 +259,7 @@ public class PokemonService extends Service {
                 });
     }
 
-    public void GetAllPokemonDatabase() {
+    private void GetAllPokemonDatabase() {
         pokemonList = new ArrayList<Pokemon>();
 
         docRef.collection("Pokemon").get()
@@ -249,6 +273,7 @@ public class PokemonService extends Service {
                                             (long) document.getData().get("#"),
                                             (String) document.getData().get("Name"),
                                             (String) document.getData().get("Type1"),
+                                            (String) document.getData().get("Type2"),
                                             (long) document.getData().get("Speed"),
                                             (long) document.getData().get("SpDefense"),
                                             (long) document.getData().get("SpAttack"),
@@ -256,18 +281,42 @@ public class PokemonService extends Service {
                                             (long) document.getData().get("Attack"),
                                             (long) document.getData().get("HP")
                                     ));
-                                    Intent intent = new Intent(BROADCAST_RESULT);
-                                    intent.putExtra("pokemonList", pokemonList);
-
-                                    bm.sendBroadcast(intent);
                                 }
+                                Intent intent = new Intent(BROADCAST_RESULT_POKEMON);
+                                intent.putExtra("pokemonList", pokemonList);
+
+                                bmPokemon.sendBroadcast(intent);
                             }
                         }
                     }
                 });
     }
 
-    public String GetUsernameDatabase() {
+    private void GetAllUsersDatabse() {
+        userList = new ArrayList<String>();
+
+        db.collection("Users").get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            if (task.getResult() != null) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    if (!document.getData().get("uid").equals(currentUser.getUid())) {
+                                        userList.add((String) document.getData().get("Username"));
+                                    }
+                                }
+                                Intent intent = new Intent(BROADCAST_RESULT_USERS);
+                                intent.putExtra("userList", userList);
+
+                                bmUsers.sendBroadcast(intent);
+                            }
+                        }
+                    }
+                });
+    }
+
+    private void GetUsernameDatabase() {
         docRef.get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
@@ -275,10 +324,20 @@ public class PokemonService extends Service {
                         if (documentSnapshot.exists()) {
                             Log.d(FIRESTORE_TAG, "SUCCESS: Got document snapshot");
                             username = documentSnapshot.getString("Username");
+
+                            Intent intent = new Intent(BROADCAST_RESULT_USERNAME);
+                            intent.putExtra("Username", username);
+
+                            bmUsername.sendBroadcast(intent);
                         }
                         else {
                             Log.d(FIRESTORE_TAG, "ERROR: Could not get document snapshot");
                             username = currentUser.getEmail();
+
+                            Intent intent = new Intent(BROADCAST_RESULT_USERNAME);
+                            intent.putExtra("Username", username);
+
+                            bmUsername.sendBroadcast(intent);
                         }
                     }
                 })
@@ -287,9 +346,12 @@ public class PokemonService extends Service {
                     public void onFailure(@NonNull Exception e) {
                         Log.d(FIRESTORE_TAG, "ERROR: Document was not found");
                         username = currentUser.getEmail();
+
+                        Intent intent = new Intent(BROADCAST_RESULT_USERNAME);
+                        intent.putExtra("Username", username);
+
+                        bmUsername.sendBroadcast(intent);
                     }
                 });
-
-        return username;
     }
 }

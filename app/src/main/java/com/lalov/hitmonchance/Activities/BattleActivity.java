@@ -8,10 +8,8 @@ import android.graphics.Color;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,6 +19,7 @@ import com.lalov.hitmonchance.PokemonService;
 import com.lalov.hitmonchance.R;
 
 import java.util.List;
+import java.util.Random;
 
 public class BattleActivity extends AppCompatActivity {
 
@@ -50,11 +49,11 @@ public class BattleActivity extends AppCompatActivity {
         btnGoToPokedex.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(BattleActivity.this,MainActivity.class);
-                startActivity(intent);
+                finish();
             }
         });
     }
+
     // Method for setting om connection to service
     // Inspired from ServiceDemo
     private void setupConnectionToPokemonService(){
@@ -72,42 +71,47 @@ public class BattleActivity extends AppCompatActivity {
                 //int icon = adaptor.findIconFormovie(movieService.getMovie(getIntent.getIntExtra("Position",0)));
                 Pokemon usersSelectedPokemon = pokemonService.GetPokemon(getIntent.getIntExtra("Position",0));
                 Pokemon enemiesSelectedPokemon = pokemonService.GetPokemon(getIntent.getIntExtra("Position",0));
+<<<<<<< HEAD
 
                 getselectedPokemon(usersSelectedPokemon,true);
                 getselectedPokemon(enemiesSelectedPokemon,false);
+=======
+                getSelectedPokemon(usersSelectedPokemon,true);
+                getSelectedPokemon(enemiesSelectedPokemon,false);
+>>>>>>> master
                 determinateWinner(calculateTotalStats(usersSelectedPokemon),calculateTotalStats(enemiesSelectedPokemon));
             }
 
             public void onServiceDisconnected(ComponentName className) {
                 pokemonService = null;
-                //Log.d(LOG, "Movie service disconnected from Details");
             }
         };
     }
-    // Bind when onStart is called
+
     @Override
     protected void onStart() {
         super.onStart();
+
+        setupConnectionToPokemonService();
         bindToPokemonService();
-        //Log.d(LOG, "Movie service has binded to Details");
     }
 
-    // UnBind when onStop is called
     @Override
     protected void onStop() {
         super.onStop();
+
         unBindFromPokemonService();
-        //Log.d(LOG, "Movie service has unbinded to Details");
     }
 
     // Method for binding. Inspired by ServiceDemo
-    void bindToPokemonService() {
-        bindService(new Intent(BattleActivity.this,
-                PokemonService.class), pokemonServiceConnection, Context.BIND_AUTO_CREATE);
+    private void bindToPokemonService() {
+        bindService(new Intent(BattleActivity.this, PokemonService.class),
+                pokemonServiceConnection, Context.BIND_AUTO_CREATE);
         bound = true;
     }
+
     // Method for binding. Inspired by ServiceDemo
-    void unBindFromPokemonService() {
+    private void unBindFromPokemonService() {
         if (bound) {
             // Detach our existing connection.
             unbindService(pokemonServiceConnection);
@@ -115,8 +119,8 @@ public class BattleActivity extends AppCompatActivity {
         }
     }
 
-    // Set up details with the correct movie
-    void getselectedPokemon(Pokemon pokemon, boolean UserOrEnemy){
+    // Set up details with the correct pokemon
+    private void getSelectedPokemon(Pokemon pokemon, boolean UserOrEnemy){
         Long totalStats = calculateTotalStats(pokemon);
         if(UserOrEnemy){
             txtUsersPokemonName.setText(pokemon.getName());
@@ -126,7 +130,8 @@ public class BattleActivity extends AppCompatActivity {
             txtEnemiesPokemonStats.setText(Long.toString(totalStats));
         }
     }
-    Long calculateTotalStats(Pokemon pokemon){
+
+    private Long calculateTotalStats(Pokemon pokemon){
         long hp = pokemon.getHp();
         long attack = pokemon.getAttack();
         long defense = pokemon.getDefense();
@@ -137,18 +142,19 @@ public class BattleActivity extends AppCompatActivity {
         return totalStat;
     }
 
-    void determinateWinner(long UserStats, long EnemyStats){
-        if(UserStats>EnemyStats){
+    private void determinateWinner(long userStats, long enemyStats){
+        Random rand = new Random();
+        int totalStats = (int) (userStats + enemyStats);
+
+        int result = rand.nextInt(totalStats);
+
+        if(result < userStats){
             txtWinner.setTextColor(Color.GREEN);
             txtWinner.setText(getResources().getString(R.string.win));
-        }else if(UserStats<EnemyStats){
+        }else {
             txtWinner.setTextColor(Color.RED);
-            txtWinner.setText(getResources().getString(R.string.loose));
-        }else{
-            txtWinner.setTextColor(Color.BLUE);
-            txtWinner.setText(getResources().getString(R.string.tie));
+            txtWinner.setText(getResources().getString(R.string.lose));
         }
-
     }
 
 }
