@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
     private ListView pokemonListView;
     private ArrayList<Pokemon> pokemonList;
     Button btnAddPokemon;
-    ImageButton imgBtnSettings;
+    ImageButton imgBtnSettings, imgBtnMusic;
     EditText txtSearchPokemon;
     TextView txtUser;
 
@@ -109,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
         btnAddPokemon = findViewById(R.id.btnAdd);
         txtSearchPokemon = findViewById(R.id.editTextAdd);
         imgBtnSettings = findViewById(R.id.imgBtnLogout);
+        imgBtnMusic = findViewById(R.id.imgBtnMusic);
         txtUser = findViewById(R.id.textViewUser);
 
         docRef = db.collection("Users").document(currentUser.getUid());
@@ -149,9 +150,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        pokemonIntroSong = MediaPlayer.create(getApplicationContext(), R.raw.pokemon_danish_introsong);
+        imgBtnMusic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (pokemonIntroSong == null) {
+                    pokemonIntroSong = MediaPlayer.create(getApplicationContext(), R.raw.pokemon_danish_introsong);
+                    pokemonIntroSong.start();
+                }
+                else {
+                    pokemonIntroSong.stop();
+                    pokemonIntroSong.release();
+                    pokemonIntroSong = null;
+                }
+            }
+        });
 
-        pokemonIntroSong.start();
     }
 
     @Override
