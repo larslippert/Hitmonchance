@@ -1,14 +1,18 @@
 package com.lalov.hitmonchance.Activities;
 
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.media.MediaPlayer;
 import android.os.IBinder;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,6 +24,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -32,10 +37,12 @@ import com.lalov.hitmonchance.R;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 import static com.lalov.hitmonchance.Globals.BROADCAST_RESULT_LOCATION;
 import static com.lalov.hitmonchance.Globals.BROADCAST_RESULT_POKEMON;
 import static com.lalov.hitmonchance.Globals.BROADCAST_RESULT_USERNAME;
+import static com.lalov.hitmonchance.Globals.PERMISSIONS_REQUEST_LOCATION;
 import static com.lalov.hitmonchance.Globals.SERVICE_TAG;
 
 public class MainActivity extends AppCompatActivity {
@@ -62,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Location userLocation;
     private Location battleLocation;
-    private String battleTime;
+    private Date battleTime;
     MediaPlayer pokemonIntroSong;
 
     private BroadcastReceiver broadcastReceiverPokemon = new BroadcastReceiver() {
@@ -83,8 +90,8 @@ public class MainActivity extends AppCompatActivity {
     private BroadcastReceiver broadcastReceiverLocation = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            userLocation = pokemonService.GetCurrentLocation();
             battleLocation = pokemonService.GetBattleLocation();
+            battleTime = pokemonService.GetBattleTime();
         }
     };
 
@@ -104,6 +111,8 @@ public class MainActivity extends AppCompatActivity {
 
         LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiverLocation,
                 new IntentFilter(BROADCAST_RESULT_LOCATION));
+
+        checkPermissions();
 
         pokemonListView = (ListView) findViewById(R.id.ListViewPokedex);
         btnAddPokemon = findViewById(R.id.btnAdd);
@@ -127,10 +136,15 @@ public class MainActivity extends AppCompatActivity {
         pokemonListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getApplicationContext(), ChooseOpponent.class);
-                intent.putExtra("position", position);
+                if (ReadyToBattle()) {
+                    Intent intent = new Intent(getApplicationContext(), ChooseOpponent.class);
+                    intent.putExtra("position", position);
 
-                startActivity(intent);
+                    startActivity(intent);
+                }
+                else {
+                    Toast.makeText(MainActivity.this, "You need to move 500 meters to battle!", Toast.LENGTH_LONG).show(); //TODO Externalize
+                }
             }
         });
 
@@ -177,6 +191,46 @@ public class MainActivity extends AppCompatActivity {
     /** ########################################################################################
      *  ######### Private methods ##############################################################
      *  ######################################################################################## */
+
+    private boolean ReadyToBattle() {
+        userLocation = pokemonService.GetCurrentLocation();
+
+        float distance = userLocation.distanceTo(battleLocation);
+
+        if (distance < 500) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    /* Inspired by TheArnieExerciseFinder demo */
+    private void checkPermissions(){
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    PERMISSIONS_REQUEST_LOCATION);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_LOCATION: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                } else {
+                    Toast.makeText(this, "You need to enable permission for Location to use the app", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+                return;
+            }
+        }
+    }
 
     private void BindToMovieService() {
         if (!bound) {

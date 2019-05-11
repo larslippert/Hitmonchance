@@ -1,14 +1,19 @@
 package com.lalov.hitmonchance;
 
+import android.Manifest;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
@@ -35,6 +40,7 @@ import com.lalov.hitmonchance.PokeAPI.PokeAPI;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -46,6 +52,7 @@ import static com.lalov.hitmonchance.Globals.BROADCAST_RESULT_RANDOM_POKEMON;
 import static com.lalov.hitmonchance.Globals.BROADCAST_RESULT_USERNAME;
 import static com.lalov.hitmonchance.Globals.BROADCAST_RESULT_USERS;
 import static com.lalov.hitmonchance.Globals.FIRESTORE_TAG;
+import static com.lalov.hitmonchance.Globals.LOCATION_TAG;
 import static com.lalov.hitmonchance.Globals.POKE_API_CALL;
 
 public class PokemonService extends Service {
@@ -72,7 +79,9 @@ public class PokemonService extends Service {
 
     private Location userLocation;
     private Location battleLocation;
-    private String battleTime;
+    private Date battleTime;
+
+    private LocationManager locationManager;
 
     public class PokemonServiceBinder extends Binder {
         public PokemonService getService() {
@@ -107,6 +116,9 @@ public class PokemonService extends Service {
         super.onCreate();
         mContext = this;
 
+        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+
+        userLocation = GetLastKnownLocation();
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         docRef = db.collection("Users").document(currentUser.getUid());
 
@@ -115,6 +127,8 @@ public class PokemonService extends Service {
         bmUsers = LocalBroadcastManager.getInstance(this);
         bmRandomPokemon = LocalBroadcastManager.getInstance(this);
         bmLocation = LocalBroadcastManager.getInstance(this);
+
+        TrackLocation();
     }
 
     @Override
@@ -122,7 +136,7 @@ public class PokemonService extends Service {
         return binder;
     }
 
-    public Context getContext(){
+    public Context getContext() {
         return mContext;
     }
 
@@ -133,9 +147,13 @@ public class PokemonService extends Service {
 
     //TODO Many of these should probably have null point handlers...
 
-    public Pokemon GetPokemon(int position) {return pokemonList.get(position); }
+    public Pokemon GetPokemon(int position) {
+        return pokemonList.get(position);
+    }
 
-    public void CreateUser(String username) { AddUserDatabase(username); } //TODO Maybe not needed, just go straight to database call
+    public void CreateUser(String username) {
+        AddUserDatabase(username);
+    } //TODO Maybe not needed, just go straight to database call
 
     public ArrayList<Pokemon> GetAllPokemon() {
         return pokemonList;
@@ -145,16 +163,53 @@ public class PokemonService extends Service {
         return username;
     }
 
-    public ArrayList<String> GetAllUsers() { return userList; }
+    public ArrayList<String> GetAllUsers() {
+        return userList;
+    }
 
-    public String GetUserId(int position) { return uidList.get(position); }
+    public String GetUserId(int position) {
+        return uidList.get(position);
+    }
 
-    public Pokemon GetOpponentPokemon() { return opponentPokemon; }
+    public Pokemon GetOpponentPokemon() {
+        return opponentPokemon;
+    }
 
-    public Location GetCurrentLocation() { return userLocation; }
+    public Location GetCurrentLocation() {
+        return userLocation;
+    }
 
-    public Location GetBattleLocation() { return battleLocation; }
+    public Location GetBattleLocation() {
+        return battleLocation;
+    }
 
+    public Date GetBattleTime() {
+        return battleTime;
+    }
+
+    private void TrackLocation() {
+        long minTime = 5000;
+        float minDistance = 5;
+        Criteria criteria = new Criteria();
+        criteria.setAccuracy(Criteria.ACCURACY_FINE);
+        criteria.setPowerRequirement(Criteria.POWER_MEDIUM);
+        if (locationManager != null) {
+            try {
+                locationManager.requestLocationUpdates(minTime, minDistance, criteria, locationListener, null);
+            } catch (SecurityException e) {
+                Log.d(LOCATION_TAG, "ERROR: " + e);
+            }
+        }
+    }
+
+    private Location GetLastKnownLocation() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return null;
+        }
+        else
+            return locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+    }
     /** ########################################################################################
      *  ######### API CALL #####################################################################
      *  ######################################################################################## */
@@ -446,7 +501,7 @@ public class PokemonService extends Service {
         battle.put("Longitude", userLocation.getLongitude());
         battle.put("Time", Calendar.getInstance().getTime());
 
-        db.collection("Users").document(currentUser.getUid()).collection("Battle").document()
+        db.collection("Users").document(currentUser.getUid()).collection("Battle").document("LatestBattle")
                 .set(battle)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -464,9 +519,9 @@ public class PokemonService extends Service {
 
     public void GetBattleLocationAndTime() {
         battleLocation = new Location("");
-        battleTime = "";
+        battleTime = new Date();
 
-        docRef.collection("Battle").document().get()
+        docRef.collection("Battle").document("LatestBattle").get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -474,7 +529,7 @@ public class PokemonService extends Service {
                             Log.d(FIRESTORE_TAG, "SUCCESS: Got document snapshot");
                             battleLocation.setLatitude((double) documentSnapshot.getLong("Latitude"));
                             battleLocation.setLongitude((double) documentSnapshot.getLong("Longitude"));
-                            battleTime = documentSnapshot.getString("Time");
+                            battleTime = documentSnapshot.getDate("Time");
 
                             Intent intent = new Intent(BROADCAST_RESULT_LOCATION);
 

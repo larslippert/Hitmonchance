@@ -1,14 +1,18 @@
 package com.lalov.hitmonchance.Activities;
 
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.IBinder;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,6 +20,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.lalov.hitmonchance.Pokemon;
 import com.lalov.hitmonchance.PokemonService;
@@ -25,6 +30,7 @@ import java.util.List;
 import java.util.Random;
 
 import static com.lalov.hitmonchance.Globals.BROADCAST_RESULT_RANDOM_POKEMON;
+import static com.lalov.hitmonchance.Globals.PERMISSIONS_REQUEST_LOCATION;
 
 public class BattleActivity extends AppCompatActivity {
 
@@ -60,6 +66,8 @@ public class BattleActivity extends AppCompatActivity {
         LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiverPokemon,
                 new IntentFilter(BROADCAST_RESULT_RANDOM_POKEMON));
 
+        checkPermissions();
+
         txtUsersPokemonName = findViewById(R.id.textViewUserName);
         txtEnemiesPokemonName = findViewById(R.id.textViewEnemyName);
         txtUsersPokemonStats = findViewById(R.id.textViewUserLevel);
@@ -83,11 +91,41 @@ public class BattleActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 determinateWinner(calculateTotalStats(usersSelectedPokemon), calculateTotalStats(enemiesSelectedPokemon));
+
+                pokemonService.AddBattleLocationAndTime();
+
                 btnBattle.setBackgroundColor(Color.GRAY);
                 btnBattle.setText("Walk 500 meters to battle again"); //TODO Externalize
                 btnBattle.setEnabled(false);
             }
         });
+    }
+
+    /* Inspired by TheArnieExerciseFinder demo */
+    private void checkPermissions(){
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    PERMISSIONS_REQUEST_LOCATION);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_LOCATION: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                } else {
+                    Toast.makeText(this, "You need to enable permission for Location to use the app", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+                return;
+            }
+        }
     }
 
     // Method for setting om connection to service
@@ -103,12 +141,6 @@ public class BattleActivity extends AppCompatActivity {
 
                 usersSelectedPokemon = pokemonService.GetPokemon(getIntent.getIntExtra("positionPokemon",0));
                 pokemonService.GetRandomPokemonDatabase(pokemonService.GetUserId(getIntent.getIntExtra("positionOpponent", 0)));
-
-                /*
-                getSelectedPokemon(usersSelectedPokemon,true);
-                getSelectedPokemon(enemiesSelectedPokemon,false);
-                determinateWinner(calculateTotalStats(usersSelectedPokemon),calculateTotalStats(enemiesSelectedPokemon));
-                */
             }
 
             public void onServiceDisconnected(ComponentName className) {
