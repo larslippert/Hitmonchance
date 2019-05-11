@@ -33,4 +33,5 @@
     <string name="totalstats">Total stats:</string>
     <string name="choose_opponent">Choose Opponent</string>
     <string name="battle">Battle!</string>
+    <string name="type">Type:</string>
 </resources>

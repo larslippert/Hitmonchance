@@ -153,10 +153,10 @@ public class BattleActivity extends AppCompatActivity {
         imgEnemy.setImageResource(R.drawable.pokeball_black);
 
         txtEnemiesPokemonName.setText(enemiesSelectedPokemon.getName());
-        txtEnemiesPokemonStats.setText(Long.toString(calculateTotalStats(enemiesSelectedPokemon)));
+        txtEnemiesPokemonStats.setText(getApplicationContext().getResources().getString(R.string.totalstats)+" "+Long.toString(calculateTotalStats(enemiesSelectedPokemon)));
 
         txtUsersPokemonName.setText(usersSelectedPokemon.getName());
-        txtUsersPokemonStats.setText(Long.toString(calculateTotalStats(usersSelectedPokemon)));
+        txtUsersPokemonStats.setText(getApplicationContext().getResources().getString(R.string.totalstats)+" "+Long.toString(calculateTotalStats(usersSelectedPokemon)));
     }
 
     private Long calculateTotalStats(Pokemon pokemon){

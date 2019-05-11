@@ -25,4 +25,5 @@
     <string name="lose">Du Tabte...</string>
     <string name="gotopokedex">Gå til pokedex</string>
     <string name="tie">I var lige stærke!</string>
+    <string name="type">Type:</string>
 </resources>

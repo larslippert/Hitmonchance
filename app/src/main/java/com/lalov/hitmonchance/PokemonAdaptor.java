@@ -59,11 +59,16 @@ public class PokemonAdaptor extends BaseAdapter {
             ImageView adaptorImage = (ImageView) convertView.findViewById(R.id.imageViewPokemon);
             adaptorImage.setImageResource(R.drawable.pokeball_black);
 
-            ImageView adaptorStatus = (ImageView) convertView.findViewById(R.id.imageViewStatus);
-            adaptorStatus.setImageResource(R.drawable.pokeball_black);
-
             TextView adaptorName = (TextView) convertView.findViewById(R.id.txtName);
             adaptorName.setText(context.getResources().getString(R.string.name)+ " " +pokemon.getName());
+
+            TextView adaptorType = (TextView) convertView.findViewById(R.id.txtDexNo);
+            if(!pokemon.getType2().equals("")){
+                adaptorType.setText(context.getResources().getString(R.string.type)+ " "+pokemon.getType1()+", "+pokemon.getType2());
+            }else{
+                adaptorType.setText(context.getResources().getString(R.string.type)+ " "+pokemon.getType1());
+            }
+
         }
         return convertView;
     }
