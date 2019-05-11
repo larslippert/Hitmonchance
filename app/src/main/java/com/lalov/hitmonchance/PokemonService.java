@@ -84,12 +84,8 @@ public class PokemonService extends Service {
         bmUsers = LocalBroadcastManager.getInstance(this);
 
         GetAllPokemonDatabase();
-<<<<<<< HEAD
-
-=======
         GetUsernameDatabase();
         GetAllUsersDatabse();
->>>>>>> master
     }
 
     @Override
