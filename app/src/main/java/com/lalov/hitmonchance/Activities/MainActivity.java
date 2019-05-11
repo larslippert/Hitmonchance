@@ -219,11 +219,4 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(MainActivity.this, LoginActivity.class));
         finish();
     }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        pokemonIntroSong.stop();
-        pokemonIntroSong.release();
-    }
 }
