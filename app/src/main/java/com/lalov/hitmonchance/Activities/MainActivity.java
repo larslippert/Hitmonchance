@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.location.Location;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
@@ -29,7 +30,9 @@ import com.lalov.hitmonchance.PokemonService;
 import com.lalov.hitmonchance.R;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
+import static com.lalov.hitmonchance.Globals.BROADCAST_RESULT_LOCATION;
 import static com.lalov.hitmonchance.Globals.BROADCAST_RESULT_POKEMON;
 import static com.lalov.hitmonchance.Globals.BROADCAST_RESULT_USERNAME;
 import static com.lalov.hitmonchance.Globals.SERVICE_TAG;
@@ -56,6 +59,10 @@ public class MainActivity extends AppCompatActivity {
     private boolean bound = false;
     private boolean newUser = true;
 
+    private Location userLocation;
+    private Location battleLocation;
+    private String battleTime;
+
     private BroadcastReceiver broadcastReceiverPokemon = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -68,6 +75,14 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             txtUser.setText(pokemonService.GetUsername());
+        }
+    };
+
+    private BroadcastReceiver broadcastReceiverLocation = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            userLocation = pokemonService.GetCurrentLocation();
+            battleLocation = pokemonService.GetBattleLocation();
         }
     };
 
@@ -85,6 +100,9 @@ public class MainActivity extends AppCompatActivity {
         LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiverUsername,
                 new IntentFilter(BROADCAST_RESULT_USERNAME));
 
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiverLocation,
+                new IntentFilter(BROADCAST_RESULT_LOCATION));
+
         pokemonListView = (ListView) findViewById(R.id.ListViewPokedex);
         btnAddPokemon = findViewById(R.id.btnAdd);
         txtSearchPokemon = findViewById(R.id.editTextAdd);
@@ -92,8 +110,6 @@ public class MainActivity extends AppCompatActivity {
         txtUser = findViewById(R.id.textViewUser);
 
         docRef = db.collection("Users").document(currentUser.getUid());
-
-        //pokemonListView.setAdapter(pokemonAdaptor);
 
         pokemonListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -172,7 +188,9 @@ public class MainActivity extends AppCompatActivity {
 
                 newUser = false;
 
-                //InitPokemon();
+                pokemonService.GetUsernameDatabase();
+                pokemonService.GetAllPokemonDatabase();
+                pokemonService.GetBattleLocationAndTime();
             }
 
             @Override

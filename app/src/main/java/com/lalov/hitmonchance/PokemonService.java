@@ -3,7 +3,10 @@ package com.lalov.hitmonchance;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationListener;
 import android.os.Binder;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
@@ -31,12 +34,13 @@ import com.google.gson.GsonBuilder;
 import com.lalov.hitmonchance.PokeAPI.PokeAPI;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
 import static com.lalov.hitmonchance.Globals.API_CONNECTION_TAG;
+import static com.lalov.hitmonchance.Globals.BROADCAST_RESULT_LOCATION;
 import static com.lalov.hitmonchance.Globals.BROADCAST_RESULT_POKEMON;
 import static com.lalov.hitmonchance.Globals.BROADCAST_RESULT_RANDOM_POKEMON;
 import static com.lalov.hitmonchance.Globals.BROADCAST_RESULT_USERNAME;
@@ -55,20 +59,48 @@ public class PokemonService extends Service {
     private RequestQueue requestQueue;
 
     private final IBinder binder = new PokemonServiceBinder();
+
     private LocalBroadcastManager bmPokemon;
     private LocalBroadcastManager bmUsername;
     private LocalBroadcastManager bmUsers;
     private LocalBroadcastManager bmRandomPokemon;
+    private LocalBroadcastManager bmLocation;
 
     private FirebaseUser currentUser;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     DocumentReference docRef;
+
+    private Location userLocation;
+    private Location battleLocation;
+    private String battleTime;
 
     public class PokemonServiceBinder extends Binder {
         public PokemonService getService() {
             return PokemonService.this;
         }
     }
+
+    private LocationListener locationListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(Location location) {
+            userLocation = location;
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+
+        }
+    };
 
     @Override
     public void onCreate() {
@@ -82,10 +114,7 @@ public class PokemonService extends Service {
         bmUsername = LocalBroadcastManager.getInstance(this);
         bmUsers = LocalBroadcastManager.getInstance(this);
         bmRandomPokemon = LocalBroadcastManager.getInstance(this);
-
-        GetAllPokemonDatabase();
-        GetUsernameDatabase();
-        GetAllUsersDatabse();
+        bmLocation = LocalBroadcastManager.getInstance(this);
     }
 
     @Override
@@ -102,11 +131,11 @@ public class PokemonService extends Service {
         super.onDestroy();
     }
 
+    //TODO Many of these should probably have null point handlers...
+
     public Pokemon GetPokemon(int position) {return pokemonList.get(position); }
 
-    public void CreateUser(String username) {
-        AddUserDatabase(username);
-    }
+    public void CreateUser(String username) { AddUserDatabase(username); } //TODO Maybe not needed, just go straight to database call
 
     public ArrayList<Pokemon> GetAllPokemon() {
         return pokemonList;
@@ -121,6 +150,10 @@ public class PokemonService extends Service {
     public String GetUserId(int position) { return uidList.get(position); }
 
     public Pokemon GetOpponentPokemon() { return opponentPokemon; }
+
+    public Location GetCurrentLocation() { return userLocation; }
+
+    public Location GetBattleLocation() { return battleLocation; }
 
     /** ########################################################################################
      *  ######### API CALL #####################################################################
@@ -254,7 +287,7 @@ public class PokemonService extends Service {
                 });
     }
 
-    private void GetAllPokemonDatabase() {
+    public void GetAllPokemonDatabase() {
         pokemonList = new ArrayList<Pokemon>();
 
         docRef.collection("Pokemon").get()
@@ -328,7 +361,7 @@ public class PokemonService extends Service {
 
                                 if (opponentPokemon != null) {
                                     Intent intent = new Intent(BROADCAST_RESULT_RANDOM_POKEMON);
-                                    intent.putExtra("pokemon", opponentPokemon);
+                                    intent.putExtra("pokemon", opponentPokemon); //TODO Might not make sense to put this here
 
                                     bmRandomPokemon.sendBroadcast(intent);
                                 }
@@ -338,7 +371,7 @@ public class PokemonService extends Service {
                 });
     }
 
-    private void GetAllUsersDatabse() {
+    public void GetAllUsersDatabase() {
         userList = new ArrayList<String>();
         uidList = new ArrayList<String>();
 
@@ -364,7 +397,7 @@ public class PokemonService extends Service {
                 });
     }
 
-    private void GetUsernameDatabase() {
+    public void GetUsernameDatabase() {
         docRef.get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
@@ -402,4 +435,62 @@ public class PokemonService extends Service {
                     }
                 });
     }
+
+    /** ########################################################################################
+     *  ######### LOCATION #####################################################################
+     *  ######################################################################################## */
+
+    public void AddBattleLocationAndTime() {
+        Map<String, Object> battle = new HashMap<>();
+        battle.put("Latitude", userLocation.getLatitude());
+        battle.put("Longitude", userLocation.getLongitude());
+        battle.put("Time", Calendar.getInstance().getTime());
+
+        db.collection("Users").document(currentUser.getUid()).collection("Battle").document()
+                .set(battle)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(FIRESTORE_TAG, "SUCCESS: Battle was added!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(FIRESTORE_TAG, "ERROR: Battle was not added with exception: " + e);
+                    }
+                });
+    }
+
+    public void GetBattleLocationAndTime() {
+        battleLocation = new Location("");
+        battleTime = "";
+
+        docRef.collection("Battle").document().get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.exists()) {
+                            Log.d(FIRESTORE_TAG, "SUCCESS: Got document snapshot");
+                            battleLocation.setLatitude((double) documentSnapshot.getLong("Latitude"));
+                            battleLocation.setLongitude((double) documentSnapshot.getLong("Longitude"));
+                            battleTime = documentSnapshot.getString("Time");
+
+                            Intent intent = new Intent(BROADCAST_RESULT_LOCATION);
+
+                            bmLocation.sendBroadcast(intent);
+                        }
+                        else {
+                            Log.d(FIRESTORE_TAG, "ERROR: Could not get document snapshot");
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(FIRESTORE_TAG, "ERROR: Document was not found with exception: " + e);
+                    }
+                });
+    }
+
 }

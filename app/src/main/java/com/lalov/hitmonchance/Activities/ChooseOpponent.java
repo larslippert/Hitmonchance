@@ -116,7 +116,8 @@ public class ChooseOpponent extends AppCompatActivity {
                 pokemonService = ((PokemonService.PokemonServiceBinder)service).getService();
                 Log.d(SERVICE_TAG, "ChooseOpponentActivity connected to pokemon service");
 
-                InitUsers();
+                pokemonService.GetAllUsersDatabase();
+                //InitUsers();
             }
 
             @Override
