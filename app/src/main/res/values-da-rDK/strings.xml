@@ -11,4 +11,18 @@
     <string name="add">Tilføj pokemon til pokedex</string>
     <string name="name">Navn:</string>
     <string name="level">Level:</string>
+    <string name="totalstats">Samlede Evner:</string>
+    <string name="textViewName">Navn</string>
+    <string name="textViewLevel">Niveau</string>
+    <string name="Logout">Log ud</string>
+    <string name="username">Brugernavn</string>
+    <string name="choose_starter">Vælg din begynder pokemon</string>
+    <string name="squirtle">Squirtle</string>
+    <string name="charmander">Charmander</string>
+    <string name="bulbasaur">Bulbasaur</string>
+    <string name="createuser">Opret din bruger</string>
+    <string name="win">Du vandt!</string>
+    <string name="lose">Du Tabte...</string>
+    <string name="gotopokedex">Gå til pokedex</string>
+    <string name="tie">I var lige stærke!</string>
 </resources>

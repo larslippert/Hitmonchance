@@ -74,11 +74,11 @@ public class SignUpActivity extends AppCompatActivity {
 
         String pokemonName;
         if (radioButtonBulbasaur.isChecked())
-            pokemonName = "Bulbasaur";
+            pokemonName = "bulbasaur";
         else if (radioButtonCharmander.isChecked())
-            pokemonName = "Charmander";
+            pokemonName = "charmander";
         else if (radioButtonSquirtle.isChecked())
-            pokemonName = "Squirtle";
+            pokemonName = "squirtle";
         else
             pokemonName = "";
 

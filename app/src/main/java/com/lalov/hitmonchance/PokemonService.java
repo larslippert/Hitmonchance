@@ -3,8 +3,10 @@ package com.lalov.hitmonchance;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
+import android.location.Location;
+import android.location.LocationListener;
 import android.os.Binder;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
@@ -32,12 +34,17 @@ import com.google.gson.GsonBuilder;
 import com.lalov.hitmonchance.PokeAPI.PokeAPI;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import static com.lalov.hitmonchance.Globals.API_CONNECTION_TAG;
-import static com.lalov.hitmonchance.Globals.BROADCAST_RESULT;
+import static com.lalov.hitmonchance.Globals.BROADCAST_RESULT_LOCATION;
+import static com.lalov.hitmonchance.Globals.BROADCAST_RESULT_POKEMON;
+import static com.lalov.hitmonchance.Globals.BROADCAST_RESULT_RANDOM_POKEMON;
+import static com.lalov.hitmonchance.Globals.BROADCAST_RESULT_USERNAME;
+import static com.lalov.hitmonchance.Globals.BROADCAST_RESULT_USERS;
 import static com.lalov.hitmonchance.Globals.FIRESTORE_TAG;
 import static com.lalov.hitmonchance.Globals.POKE_API_CALL;
 
@@ -45,21 +52,55 @@ public class PokemonService extends Service {
 
     private Context mContext;
     private ArrayList<Pokemon> pokemonList;
+    private Pokemon opponentPokemon;
     private String username;
+    private ArrayList<String> userList;
+    private ArrayList<String> uidList;
     private RequestQueue requestQueue;
 
     private final IBinder binder = new PokemonServiceBinder();
-    private LocalBroadcastManager bm;
+
+    private LocalBroadcastManager bmPokemon;
+    private LocalBroadcastManager bmUsername;
+    private LocalBroadcastManager bmUsers;
+    private LocalBroadcastManager bmRandomPokemon;
+    private LocalBroadcastManager bmLocation;
 
     private FirebaseUser currentUser;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     DocumentReference docRef;
+
+    private Location userLocation;
+    private Location battleLocation;
+    private String battleTime;
 
     public class PokemonServiceBinder extends Binder {
         public PokemonService getService() {
             return PokemonService.this;
         }
     }
+
+    private LocationListener locationListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(Location location) {
+            userLocation = location;
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+
+        }
+    };
 
     @Override
     public void onCreate() {
@@ -69,9 +110,11 @@ public class PokemonService extends Service {
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         docRef = db.collection("Users").document(currentUser.getUid());
 
-        bm = LocalBroadcastManager.getInstance(this);
-
-        GetAllPokemonDatabase();
+        bmPokemon = LocalBroadcastManager.getInstance(this);
+        bmUsername = LocalBroadcastManager.getInstance(this);
+        bmUsers = LocalBroadcastManager.getInstance(this);
+        bmRandomPokemon = LocalBroadcastManager.getInstance(this);
+        bmLocation = LocalBroadcastManager.getInstance(this);
     }
 
     @Override
@@ -88,29 +131,33 @@ public class PokemonService extends Service {
         super.onDestroy();
     }
 
+    //TODO Many of these should probably have null point handlers...
+
     public Pokemon GetPokemon(int position) {return pokemonList.get(position); }
 
-    public void CreateUser(String username) {
-        AddUserDatabase(username);
-    }
-
+    public void CreateUser(String username) { AddUserDatabase(username); } //TODO Maybe not needed, just go straight to database call
 
     public ArrayList<Pokemon> GetAllPokemon() {
         return pokemonList;
     }
 
-
-    /*
     public String GetUsername() {
-        GetUsernameDatabase();
         return username;
     }
-    */
+
+    public ArrayList<String> GetAllUsers() { return userList; }
+
+    public String GetUserId(int position) { return uidList.get(position); }
+
+    public Pokemon GetOpponentPokemon() { return opponentPokemon; }
+
+    public Location GetCurrentLocation() { return userLocation; }
+
+    public Location GetBattleLocation() { return battleLocation; }
 
     /** ########################################################################################
      *  ######### API CALL #####################################################################
      *  ######################################################################################## */
-
 
     public void AddPokemon(String name) {
         String url = POKE_API_CALL + name;
@@ -124,8 +171,8 @@ public class PokemonService extends Service {
                     AddPokemonDatabase(pokemon);
                     pokemonList.add(pokemon);
 
-                    Intent broadcastIntent = new Intent(BROADCAST_RESULT);
-                    bm.sendBroadcast(broadcastIntent);
+                    Intent broadcastIntent = new Intent(BROADCAST_RESULT_POKEMON);
+                    bmPokemon.sendBroadcast(broadcastIntent);
 
                     Log.d(API_CONNECTION_TAG, "SUCCESS: Pokemon added");
                 }
@@ -136,7 +183,7 @@ public class PokemonService extends Service {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d(API_CONNECTION_TAG, "ERROR: API call failed");
+                Log.d(API_CONNECTION_TAG, "ERROR: API call failed with error: " + error);
             }
         });
 
@@ -153,10 +200,21 @@ public class PokemonService extends Service {
         PokeAPI pokeAPI = gson.fromJson(jsonResponse, PokeAPI.class);
 
         if (pokeAPI != null) {
+            String type1 = pokeAPI.getTypes().get(0).getType().getName();
+            String type2 = "";
+
+            if (pokeAPI.getTypes().size() == 2) {
+                type1 = pokeAPI.getTypes().get(1).getType().getName();
+                type2 = pokeAPI.getTypes().get(0).getType().getName();
+            }
+
+            String name = pokeAPI.getName().substring(0,1).toUpperCase() + pokeAPI.getName().substring(1);
+
             Pokemon pokemon = new Pokemon(
                     pokeAPI.getId(),
-                    pokeAPI.getName(),
-                    pokeAPI.getTypes().get(0).getType().getName(),
+                    name,
+                    type1,
+                    type2,
                     pokeAPI.getStats().get(0).getBaseStat(),
                     pokeAPI.getStats().get(1).getBaseStat(),
                     pokeAPI.getStats().get(2).getBaseStat(),
@@ -205,6 +263,7 @@ public class PokemonService extends Service {
         _pokemon.put("#", pokemon.getId());
         _pokemon.put("Name", pokemon.getName());
         _pokemon.put("Type1", pokemon.getType1());
+        _pokemon.put("Type2", pokemon.getType2());
         _pokemon.put("Speed", pokemon.getSpeed());
         _pokemon.put("SpDefense", pokemon.getSpdefense());
         _pokemon.put("SpAttack", pokemon.getSpattack());
@@ -242,6 +301,7 @@ public class PokemonService extends Service {
                                             (long) document.getData().get("#"),
                                             (String) document.getData().get("Name"),
                                             (String) document.getData().get("Type1"),
+                                            (String) document.getData().get("Type2"),
                                             (long) document.getData().get("Speed"),
                                             (long) document.getData().get("SpDefense"),
                                             (long) document.getData().get("SpAttack"),
@@ -249,10 +309,61 @@ public class PokemonService extends Service {
                                             (long) document.getData().get("Attack"),
                                             (long) document.getData().get("HP")
                                     ));
-                                    Intent intent = new Intent(BROADCAST_RESULT);
-                                    intent.putExtra("pokemonList", pokemonList);
+                                }
 
-                                    bm.sendBroadcast(intent);
+                                Intent intent = new Intent(BROADCAST_RESULT_POKEMON);
+                                intent.putExtra("pokemonList", pokemonList);
+
+                                bmPokemon.sendBroadcast(intent);
+
+                            }
+                        }
+                    }
+                });
+    }
+
+    public void GetRandomPokemonDatabase(String uid) {
+        db.collection("Users").document(uid).collection("Pokemon").get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            if (task.getResult() != null) {
+                                int numberOfPokemon = task.getResult().size();
+                                Random rand = new Random();
+                                int chosenPokemon = 0;
+
+                                if (numberOfPokemon > 1) {
+                                    chosenPokemon = rand.nextInt(numberOfPokemon);
+                                }
+
+                                int counter = 0;
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    if (counter == chosenPokemon) {
+                                        opponentPokemon = new Pokemon(
+                                                (long) document.getData().get("#"),
+                                                (String) document.getData().get("Name"),
+                                                (String) document.getData().get("Type1"),
+                                                (String) document.getData().get("Type2"),
+                                                (long) document.getData().get("Speed"),
+                                                (long) document.getData().get("SpDefense"),
+                                                (long) document.getData().get("SpAttack"),
+                                                (long) document.getData().get("Defense"),
+                                                (long) document.getData().get("Attack"),
+                                                (long) document.getData().get("HP")
+                                        );
+
+                                        break;
+                                    }
+
+                                    counter++;
+                                }
+
+                                if (opponentPokemon != null) {
+                                    Intent intent = new Intent(BROADCAST_RESULT_RANDOM_POKEMON);
+                                    intent.putExtra("pokemon", opponentPokemon); //TODO Might not make sense to put this here
+
+                                    bmRandomPokemon.sendBroadcast(intent);
                                 }
                             }
                         }
@@ -260,7 +371,33 @@ public class PokemonService extends Service {
                 });
     }
 
-    public String GetUsernameDatabase() {
+    public void GetAllUsersDatabase() {
+        userList = new ArrayList<String>();
+        uidList = new ArrayList<String>();
+
+        db.collection("Users").get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            if (task.getResult() != null) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    if (!document.getData().get("uid").equals(currentUser.getUid())) {
+                                        userList.add((String) document.getData().get("Username"));
+                                        uidList.add((String) document.getData().get("uid"));
+                                    }
+                                }
+                                Intent intent = new Intent(BROADCAST_RESULT_USERS);
+                                intent.putExtra("userList", userList);
+
+                                bmUsers.sendBroadcast(intent);
+                            }
+                        }
+                    }
+                });
+    }
+
+    public void GetUsernameDatabase() {
         docRef.get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
@@ -268,10 +405,20 @@ public class PokemonService extends Service {
                         if (documentSnapshot.exists()) {
                             Log.d(FIRESTORE_TAG, "SUCCESS: Got document snapshot");
                             username = documentSnapshot.getString("Username");
+
+                            Intent intent = new Intent(BROADCAST_RESULT_USERNAME);
+                            intent.putExtra("Username", username);
+
+                            bmUsername.sendBroadcast(intent);
                         }
                         else {
                             Log.d(FIRESTORE_TAG, "ERROR: Could not get document snapshot");
                             username = currentUser.getEmail();
+
+                            Intent intent = new Intent(BROADCAST_RESULT_USERNAME);
+                            intent.putExtra("Username", username);
+
+                            bmUsername.sendBroadcast(intent);
                         }
                     }
                 })
@@ -280,9 +427,70 @@ public class PokemonService extends Service {
                     public void onFailure(@NonNull Exception e) {
                         Log.d(FIRESTORE_TAG, "ERROR: Document was not found");
                         username = currentUser.getEmail();
+
+                        Intent intent = new Intent(BROADCAST_RESULT_USERNAME);
+                        intent.putExtra("Username", username);
+
+                        bmUsername.sendBroadcast(intent);
                     }
                 });
-
-        return username;
     }
+
+    /** ########################################################################################
+     *  ######### LOCATION #####################################################################
+     *  ######################################################################################## */
+
+    public void AddBattleLocationAndTime() {
+        Map<String, Object> battle = new HashMap<>();
+        battle.put("Latitude", userLocation.getLatitude());
+        battle.put("Longitude", userLocation.getLongitude());
+        battle.put("Time", Calendar.getInstance().getTime());
+
+        db.collection("Users").document(currentUser.getUid()).collection("Battle").document()
+                .set(battle)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(FIRESTORE_TAG, "SUCCESS: Battle was added!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(FIRESTORE_TAG, "ERROR: Battle was not added with exception: " + e);
+                    }
+                });
+    }
+
+    public void GetBattleLocationAndTime() {
+        battleLocation = new Location("");
+        battleTime = "";
+
+        docRef.collection("Battle").document().get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.exists()) {
+                            Log.d(FIRESTORE_TAG, "SUCCESS: Got document snapshot");
+                            battleLocation.setLatitude((double) documentSnapshot.getLong("Latitude"));
+                            battleLocation.setLongitude((double) documentSnapshot.getLong("Longitude"));
+                            battleTime = documentSnapshot.getString("Time");
+
+                            Intent intent = new Intent(BROADCAST_RESULT_LOCATION);
+
+                            bmLocation.sendBroadcast(intent);
+                        }
+                        else {
+                            Log.d(FIRESTORE_TAG, "ERROR: Could not get document snapshot");
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(FIRESTORE_TAG, "ERROR: Document was not found with exception: " + e);
+                    }
+                });
+    }
+
 }

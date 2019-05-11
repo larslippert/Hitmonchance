@@ -4,6 +4,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
     <application
         android:allowBackup="true"
@@ -12,14 +14,14 @@
         android:roundIcon="@drawable/hitmonchancelogo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities.SignUpActivity"></activity>
+        <activity android:name=".Activities.ChooseOpponent"
+            android:theme="@style/AppTheme.Popup"
+            ></activity>
+        <activity android:name=".Activities.SignUpActivity" />
         <activity android:name=".Activities.StatsActivity" />
+        <activity android:name=".Activities.BattleActivity" />
         <activity android:name=".Activities.MainActivity" />
         <activity android:name=".Activities.LoginActivity">
-        <activity android:name=".BattleActivity"></activity>
-        <activity android:name=".StatsActivity" />
-        <activity android:name=".MainActivity" />
-        <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,7 +30,7 @@
         </activity>
 
         <service
-            android:name="PokemonService"
+            android:name=".PokemonService"
             android:enabled="true"
             android:exported="false" />
     </application>
