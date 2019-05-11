@@ -177,9 +177,9 @@ public class BattleActivity extends AppCompatActivity {
 
         int bonus = 0;
         if (userStats > enemyStats)
-            bonus = -75;
+            bonus = -70;
         else if (enemyStats > userStats)
-            bonus = 75;
+            bonus = 70;
 
         int result = rand.nextInt(totalStats) + bonus;
 
