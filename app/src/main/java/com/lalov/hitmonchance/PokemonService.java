@@ -254,7 +254,7 @@ public class PokemonService extends Service {
         Gson gson = new GsonBuilder().create();
         PokeAPI pokeAPI = gson.fromJson(jsonResponse, PokeAPI.class);
 
-        if (pokeAPI != null) {
+        if (pokeAPI.getId() != null) {
             String type1 = pokeAPI.getTypes().get(0).getType().getName();
             String type2 = "";
 
@@ -497,8 +497,8 @@ public class PokemonService extends Service {
 
     public void AddBattleLocationAndTime() {
         Map<String, Object> battle = new HashMap<>();
-        battle.put("Latitude", userLocation.getLatitude());
-        battle.put("Longitude", userLocation.getLongitude());
+        battle.put("Latitude", String.valueOf(userLocation.getLatitude()));
+        battle.put("Longitude", String.valueOf(userLocation.getLongitude()));
         battle.put("Time", Calendar.getInstance().getTime());
 
         db.collection("Users").document(currentUser.getUid()).collection("Battle").document("LatestBattle")
@@ -527,8 +527,8 @@ public class PokemonService extends Service {
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         if (documentSnapshot.exists()) {
                             Log.d(FIRESTORE_TAG, "SUCCESS: Got document snapshot");
-                            battleLocation.setLatitude((double) documentSnapshot.getLong("Latitude"));
-                            battleLocation.setLongitude((double) documentSnapshot.getLong("Longitude"));
+                            battleLocation.setLatitude(Double.parseDouble(documentSnapshot.getString("Latitude")));
+                            battleLocation.setLongitude(Double.parseDouble(documentSnapshot.getString("Longitude")));
                             battleTime = documentSnapshot.getDate("Time");
 
                             Intent intent = new Intent(BROADCAST_RESULT_LOCATION);

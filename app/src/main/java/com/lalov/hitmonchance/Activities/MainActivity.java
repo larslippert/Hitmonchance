@@ -100,20 +100,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        SetupConnectionToPokemonService();
-        BindToMovieService();
-
-        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiverPokemon,
-                new IntentFilter(BROADCAST_RESULT_POKEMON));
-
-        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiverUsername,
-                new IntentFilter(BROADCAST_RESULT_USERNAME));
-
-        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiverLocation,
-                new IntentFilter(BROADCAST_RESULT_LOCATION));
-
-        checkPermissions();
-
         pokemonListView = (ListView) findViewById(R.id.ListViewPokedex);
         btnAddPokemon = findViewById(R.id.btnAdd);
         txtSearchPokemon = findViewById(R.id.editTextAdd);
@@ -159,8 +145,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String pokemonName = txtSearchPokemon.getText().toString().toLowerCase();
-                pokemonService.AddPokemon(pokemonName);
-                txtSearchPokemon.getText().clear();
+
+                if (!pokemonName.equals("")) {
+                    pokemonService.AddPokemon(pokemonName);
+                    txtSearchPokemon.getText().clear();
+                }
+                else {
+                    txtSearchPokemon.setError("Please enter the name of a Pokemon"); //TODO Externalize
+                }
             }
         });
 
@@ -182,8 +174,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    protected void onResume() {
+        super.onResume();
+
+        SetupConnectionToPokemonService();
+        BindToMovieService();
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiverPokemon,
+                new IntentFilter(BROADCAST_RESULT_POKEMON));
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiverUsername,
+                new IntentFilter(BROADCAST_RESULT_USERNAME));
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiverLocation,
+                new IntentFilter(BROADCAST_RESULT_LOCATION));
+
+        checkPermissions();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
 
         UnBindFromMovieService();
     }
@@ -193,12 +204,17 @@ public class MainActivity extends AppCompatActivity {
      *  ######################################################################################## */
 
     private boolean ReadyToBattle() {
-        userLocation = pokemonService.GetCurrentLocation();
+        if (battleLocation != null) {
+            userLocation = pokemonService.GetCurrentLocation();
 
-        float distance = userLocation.distanceTo(battleLocation);
+            float distance = userLocation.distanceTo(battleLocation);
 
-        if (distance < 500) {
-            return false;
+            if (distance < 500) {
+                return false;
+            }
+            else {
+                return true;
+            }
         }
         else {
             return true;
