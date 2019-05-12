@@ -35,6 +35,7 @@ import com.lalov.hitmonchance.PokemonAdaptor;
 import com.lalov.hitmonchance.PokemonService;
 import com.lalov.hitmonchance.R;
 
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -42,8 +43,10 @@ import java.util.Date;
 import static com.lalov.hitmonchance.Globals.BROADCAST_RESULT_LOCATION;
 import static com.lalov.hitmonchance.Globals.BROADCAST_RESULT_POKEMON;
 import static com.lalov.hitmonchance.Globals.BROADCAST_RESULT_USERNAME;
+import static com.lalov.hitmonchance.Globals.METERS_TO_WALK;
 import static com.lalov.hitmonchance.Globals.PERMISSIONS_REQUEST_LOCATION;
 import static com.lalov.hitmonchance.Globals.SERVICE_TAG;
+import static com.lalov.hitmonchance.Globals.TIME_TO_PASS;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -122,14 +125,14 @@ public class MainActivity extends AppCompatActivity {
         pokemonListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (ReadyToBattle()) {
+                if (ReadyToBattleLocation() && ReadyToBattleTime()) {
                     Intent intent = new Intent(getApplicationContext(), ChooseOpponent.class);
                     intent.putExtra("position", position);
 
                     startActivity(intent);
                 }
                 else {
-                    Toast.makeText(MainActivity.this, "You need to move 500 meters to battle!", Toast.LENGTH_LONG).show(); //TODO Externalize
+                    Toast.makeText(MainActivity.this, "You need to walk 500 meters to battle!", Toast.LENGTH_LONG).show(); //TODO Externalize
                 }
             }
         });
@@ -193,8 +196,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onPause() {
+        super.onPause();
 
         UnBindFromMovieService();
     }
@@ -203,13 +206,31 @@ public class MainActivity extends AppCompatActivity {
      *  ######### Private methods ##############################################################
      *  ######################################################################################## */
 
-    private boolean ReadyToBattle() {
+    private boolean ReadyToBattleTime() {
+        Date currentDate = Calendar.getInstance().getTime();
+
+        if (battleTime != null) {
+            long minutesPast = ((currentDate.getTime() - battleTime.getTime()) / 1000) / 60;
+
+            if (minutesPast >= TIME_TO_PASS) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        else {
+            return true;
+        }
+    }
+
+    private boolean ReadyToBattleLocation() {
         if (battleLocation != null) {
             userLocation = pokemonService.GetCurrentLocation();
 
             float distance = userLocation.distanceTo(battleLocation);
 
-            if (distance < 500) {
+            if (distance < METERS_TO_WALK) {
                 return false;
             }
             else {
@@ -240,7 +261,7 @@ public class MainActivity extends AppCompatActivity {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 } else {
-                    Toast.makeText(this, "You need to enable permission for Location to use the app", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "You need to enable permission for Location to use the app", Toast.LENGTH_SHORT).show(); //TODO Externalize
                     finish();
                 }
                 return;

@@ -148,7 +148,10 @@ public class PokemonService extends Service {
     //TODO Many of these should probably have null point handlers...
 
     public Pokemon GetPokemon(int position) {
-        return pokemonList.get(position);
+        if (pokemonList != null)
+            return pokemonList.get(position);
+        else
+            return null;
     }
 
     public void CreateUser(String username) {
@@ -342,7 +345,7 @@ public class PokemonService extends Service {
                 });
     }
 
-    public void GetAllPokemonDatabase() {
+    public void GetAllPokemonDatabase() { //TODO Should be called in StatsActivity along with a broadcastManager
         pokemonList = new ArrayList<Pokemon>();
 
         docRef.collection("Pokemon").get()
