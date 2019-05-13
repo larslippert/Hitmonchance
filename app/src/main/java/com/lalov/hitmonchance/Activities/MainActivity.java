@@ -52,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
 
     //TODO Error where pokemon is added to list twice
 
-    private static final String TAG = "Tag123";
     private PokemonAdaptor pokemonAdaptor;
     private ListView pokemonListView;
     private ArrayList<Pokemon> pokemonList;
@@ -102,6 +101,20 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        SetupConnectionToPokemonService();
+        BindToMovieService();
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiverPokemon,
+                new IntentFilter(BROADCAST_RESULT_POKEMON));
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiverUsername,
+                new IntentFilter(BROADCAST_RESULT_USERNAME));
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiverLocation,
+                new IntentFilter(BROADCAST_RESULT_LOCATION));
+
+        checkPermissions();
 
         pokemonListView = (ListView) findViewById(R.id.ListViewPokedex);
         btnAddPokemon = findViewById(R.id.btnAdd);
@@ -179,25 +192,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
-        SetupConnectionToPokemonService();
-        BindToMovieService();
-
-        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiverPokemon,
-                new IntentFilter(BROADCAST_RESULT_POKEMON));
-
-        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiverUsername,
-                new IntentFilter(BROADCAST_RESULT_USERNAME));
-
-        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiverLocation,
-                new IntentFilter(BROADCAST_RESULT_LOCATION));
-
-        checkPermissions();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
 
         UnBindFromMovieService();
     }

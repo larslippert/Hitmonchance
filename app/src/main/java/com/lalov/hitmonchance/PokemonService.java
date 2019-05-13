@@ -148,10 +148,7 @@ public class PokemonService extends Service {
     //TODO Many of these should probably have null point handlers...
 
     public Pokemon GetPokemon(int position) {
-        if (pokemonList != null)
-            return pokemonList.get(position);
-        else
-            return null;
+        return pokemonList.get(position);
     }
 
     public void CreateUser(String username) {

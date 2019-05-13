@@ -134,10 +134,8 @@ public class BattleActivity extends AppCompatActivity {
         pokemonServiceConnection = new ServiceConnection() {
             public void onServiceConnected(ComponentName className, IBinder service) {
                 pokemonService = ((PokemonService.PokemonServiceBinder)service).getService();
-                //Log.d(LOG, "Movie service connected to Details");
 
                 final Intent getIntent = getIntent();
-                List<Pokemon> pokemonList = pokemonService.GetAllPokemon();
 
                 usersSelectedPokemon = pokemonService.GetPokemon(getIntent.getIntExtra("positionPokemon",0));
                 pokemonService.GetRandomPokemonDatabase(pokemonService.GetUserId(getIntent.getIntExtra("positionOpponent", 0)));
