@@ -180,7 +180,7 @@ public class BattleActivity extends AppCompatActivity {
             txtEnemiesPokemonName.setText(pokemon.getName());
             txtEnemiesPokemonStats.setText(Long.toString(totalStats));
         }
-    }
+    } //TODO Delete
 
     private void InitPokemon() {
         imgUser.setImageResource(R.drawable.pokeball_black);

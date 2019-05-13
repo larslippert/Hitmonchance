@@ -31,7 +31,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
@@ -44,6 +46,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+
+import javax.annotation.Nullable;
 
 import static com.lalov.hitmonchance.Globals.API_CONNECTION_TAG;
 import static com.lalov.hitmonchance.Globals.BROADCAST_RESULT_LOCATION;
@@ -129,6 +133,9 @@ public class PokemonService extends Service {
         bmLocation = LocalBroadcastManager.getInstance(this);
 
         TrackLocation();
+        SetBattleDatabaseListener();
+        SetPokemonListListener();
+        SetUsernameListener();
     }
 
     @Override
@@ -351,6 +358,7 @@ public class PokemonService extends Service {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             if (task.getResult() != null) {
+                                pokemonList.clear();
                                 for (QueryDocumentSnapshot document : task.getResult()) {
                                     pokemonList.add(new Pokemon(
                                             (long) document.getData().get("#"),
@@ -548,4 +556,98 @@ public class PokemonService extends Service {
                 });
     }
 
+    /** ########################################################################################
+     *  ######### LISTENERS ####################################################################
+     *  ######################################################################################## */
+
+    private void SetBattleDatabaseListener() {
+        db.collection("Users").document(currentUser.getUid()).collection("Battle").document("LatestBattle")
+                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            Log.d(FIRESTORE_TAG, "ERROR: Location listener failed: " + e);
+                            return;
+                        }
+
+                        if (documentSnapshot != null && documentSnapshot.exists()) {
+                            Log.d(FIRESTORE_TAG, "SUCCESS: Set location and time");
+                            battleLocation.setLatitude(Double.parseDouble(documentSnapshot.getString("Latitude")));
+                            battleLocation.setLongitude(Double.parseDouble(documentSnapshot.getString("Longitude")));
+                            battleTime = documentSnapshot.getDate("Time");
+
+                            Intent intent = new Intent(BROADCAST_RESULT_LOCATION);
+
+                            bmLocation.sendBroadcast(intent);
+                        }
+                        else {
+                            Log.d(FIRESTORE_TAG, "ERROR: Locator DocumentSnapshot is null");
+                        }
+                    }
+                });
+    }
+
+    private void SetUsernameListener() {
+        db.collection("Users").document(currentUser.getUid())
+                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            Log.d(FIRESTORE_TAG, "ERROR: Username listener failed: " + e);
+                            return;
+                        }
+
+                        if (documentSnapshot != null && documentSnapshot.exists()) {
+                            Log.d(FIRESTORE_TAG, "SUCCESS: Set username");
+                            username = documentSnapshot.getString("Username");
+
+                            Intent intent = new Intent(BROADCAST_RESULT_USERNAME);
+
+                            bmUsername.sendBroadcast(intent);
+                        }
+                        else {
+                            Log.d(FIRESTORE_TAG, "ERROR: Locator DocumentSnapshot is null");
+                        }
+                    }
+                });
+    }
+
+    private void SetPokemonListListener() {
+        db.collection("Users").document(currentUser.getUid()).collection("Pokemon")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            Log.d(FIRESTORE_TAG, "ERROR: Pokemon list listener failed: " + e);
+                            return;
+                        }
+
+                        if (queryDocumentSnapshots != null) {
+                            Log.d(FIRESTORE_TAG, "SUCCESS: Set Pokemon list");
+                            pokemonList.clear();
+                            for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                                pokemonList.add(new Pokemon(
+                                        (long) document.getData().get("#"),
+                                        (String) document.getData().get("Name"),
+                                        (String) document.getData().get("Type1"),
+                                        (String) document.getData().get("Type2"),
+                                        (long) document.getData().get("Speed"),
+                                        (long) document.getData().get("SpDefense"),
+                                        (long) document.getData().get("SpAttack"),
+                                        (long) document.getData().get("Defense"),
+                                        (long) document.getData().get("Attack"),
+                                        (long) document.getData().get("HP")
+                                ));
+                            }
+
+                            Intent intent = new Intent(BROADCAST_RESULT_POKEMON);
+
+                            bmPokemon.sendBroadcast(intent);
+                        }
+                        else {
+                            Log.d(FIRESTORE_TAG, "ERROR: Locator DocumentSnapshot is null");
+                        }
+                    }
+                });
+    }
 }

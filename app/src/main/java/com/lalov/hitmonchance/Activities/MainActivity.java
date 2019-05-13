@@ -139,6 +139,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (ReadyToBattleLocation() && ReadyToBattleTime()) {
+                    if (pokemonIntroSong != null) {
+                        pokemonIntroSong.stop();
+                        pokemonIntroSong.release();
+                        pokemonIntroSong = null;
+                    }
+                    
                     Intent intent = new Intent(getApplicationContext(), ChooseOpponent.class);
                     intent.putExtra("position", position);
 
