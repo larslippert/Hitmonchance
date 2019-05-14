@@ -223,7 +223,6 @@ public class PokemonService extends Service {
 
     public void AddPokemon(String name) {
         String url = POKE_API_CALL + name;
-
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -257,6 +256,8 @@ public class PokemonService extends Service {
     }
 
 
+
+
     private Pokemon InterpretPokemonJSON(String jsonResponse) {
         Gson gson = new GsonBuilder().create();
         PokeAPI pokeAPI = gson.fromJson(jsonResponse, PokeAPI.class);
@@ -282,7 +283,8 @@ public class PokemonService extends Service {
                     pokeAPI.getStats().get(2).getBaseStat(),
                     pokeAPI.getStats().get(3).getBaseStat(),
                     pokeAPI.getStats().get(4).getBaseStat(),
-                    pokeAPI.getStats().get(5).getBaseStat()
+                    pokeAPI.getStats().get(5).getBaseStat(),
+                    pokeAPI.getSprites().getFrontDefault()
             );
 
             return pokemon;
@@ -332,6 +334,7 @@ public class PokemonService extends Service {
         _pokemon.put("Defense", pokemon.getDefense());
         _pokemon.put("Attack", pokemon.getAttack());
         _pokemon.put("HP", pokemon.getHp());
+        _pokemon.put("ImageUrl", pokemon.getImage());
 
         db.collection("Users").document(currentUser.getUid()).collection("Pokemon").document()
                 .set(_pokemon)
@@ -370,7 +373,8 @@ public class PokemonService extends Service {
                                             (long) document.getData().get("SpAttack"),
                                             (long) document.getData().get("Defense"),
                                             (long) document.getData().get("Attack"),
-                                            (long) document.getData().get("HP")
+                                            (long) document.getData().get("HP"),
+                                            (String) document.getData().get("ImageUrl")
                                     ));
                                 }
 
@@ -413,7 +417,8 @@ public class PokemonService extends Service {
                                                 (long) document.getData().get("SpAttack"),
                                                 (long) document.getData().get("Defense"),
                                                 (long) document.getData().get("Attack"),
-                                                (long) document.getData().get("HP")
+                                                (long) document.getData().get("HP"),
+                                                (String) document.getData().get("ImageUrl")
                                         );
 
                                         break;
@@ -636,7 +641,8 @@ public class PokemonService extends Service {
                                         (long) document.getData().get("SpAttack"),
                                         (long) document.getData().get("Defense"),
                                         (long) document.getData().get("Attack"),
-                                        (long) document.getData().get("HP")
+                                        (long) document.getData().get("HP"),
+                                        (String) document.getData().get("ImageUrl")
                                 ));
                             }
 
