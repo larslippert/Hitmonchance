@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.lalov.hitmonchance.DownloadImageTask;
 import com.lalov.hitmonchance.Pokemon;
 import com.lalov.hitmonchance.PokemonService;
 import com.lalov.hitmonchance.R;
@@ -183,8 +184,8 @@ public class BattleActivity extends AppCompatActivity {
     } //TODO Delete
 
     private void InitPokemon() {
-        imgUser.setImageResource(R.drawable.pokeball_black);
-        imgEnemy.setImageResource(R.drawable.pokeball_black);
+        new DownloadImageTask((ImageView) findViewById(R.id.imageViewUserPokemon)).execute(usersSelectedPokemon.getImage());
+        new DownloadImageTask((ImageView) findViewById(R.id.imageViewEnemyPokemon)).execute(enemiesSelectedPokemon.getImage());
 
         txtEnemiesPokemonName.setText(enemiesSelectedPokemon.getName());
         txtEnemiesPokemonStats.setText(getApplicationContext().getResources().getString(R.string.totalstats)+" "+Long.toString(calculateTotalStats(enemiesSelectedPokemon)));

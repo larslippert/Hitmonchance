@@ -9,8 +9,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.lalov.hitmonchance.DownloadImageTask;
 import com.lalov.hitmonchance.Pokemon;
 import com.lalov.hitmonchance.PokemonService;
 import com.lalov.hitmonchance.R;
@@ -21,6 +23,7 @@ import static com.lalov.hitmonchance.Globals.SERVICE_TAG;
 public class StatsActivity extends AppCompatActivity {
     TextView txtName, txtDexNo, txtHP, txtHPStat, txtAttack, txtAttackStat, txtDefense, txtDefenseStat
             ,txtSpAtk, txtSpAtkStat, txtSpDef, txtSpDefStat, txtSpeed, txtSpeedStat;
+    ImageView imgPokemon;
 
     private ServiceConnection pokemonServiceConnection;
     private PokemonService pokemonService;
@@ -52,6 +55,7 @@ public class StatsActivity extends AppCompatActivity {
         txtSpDefStat = findViewById(R.id.txtSpDefStat);
         txtSpeed = findViewById(R.id.txtSpeed);
         txtSpeedStat = findViewById(R.id.txtSpeedStat);
+        imgPokemon = findViewById(R.id.imageView);
 
     }
 
@@ -71,6 +75,7 @@ public class StatsActivity extends AppCompatActivity {
     }
 
     private void setStats(Pokemon selectedPokemon){
+        new DownloadImageTask((ImageView) findViewById(R.id.imageView)).execute(selectedPokemon.getImage());
         txtName.setText(getString(R.string.name) + " " + selectedPokemon.getName());
         txtDexNo.setText(getString(R.string.txtDexNo) + " " + selectedPokemon.getId());
         txtHPStat.setText(Long.toString(selectedPokemon.getHp()));

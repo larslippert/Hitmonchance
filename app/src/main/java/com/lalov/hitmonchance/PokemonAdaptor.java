@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
-public class PokemonAdaptor extends BaseAdapter {
+public class PokemonAdaptor extends BaseAdapter{
 
     // Inspiration from demo with listview
     Context context;

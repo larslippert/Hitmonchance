@@ -26,14 +26,13 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="83dp"
-        android:layout_height="78dp"
+        android:layout_width="142dp"
+        android:layout_height="142dp"
         android:layout_marginStart="28dp"
         android:layout_marginLeft="28dp"
         android:layout_marginTop="36dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@mipmap/ic_launcher" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <TextView
@@ -42,13 +41,14 @@
         android:layout_height="0dp"
         android:layout_marginStart="44dp"
         android:layout_marginLeft="44dp"
-        android:layout_marginTop="44dp"
+        android:layout_marginTop="56dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:text="@string/name"
         android:textColor="#ffffff"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.022"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/imageView"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -65,14 +65,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.473"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtDexNo">
+        app:layout_constraintTop_toBottomOf="@+id/txtDexNo"
+        app:layout_constraintVertical_bias="0.71000004">
 
         <TableRow
-            android:background="@drawable/table_row_bg"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="15dp"
-            >
+            android:background="@drawable/table_row_bg"
+            android:padding="15dp">
 
             <TextView
                 android:id="@+id/txtHP"
@@ -91,11 +91,10 @@
 
 
         <TableRow
-            android:background="@drawable/table_row_bg"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="15dp"
-            >
+            android:background="@drawable/table_row_bg"
+            android:padding="15dp">
 
             <TextView
                 android:id="@+id/txtAttack"
@@ -113,11 +112,10 @@
         </TableRow>
 
         <TableRow
-            android:background="@drawable/table_row_bg"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="15dp"
-            >
+            android:background="@drawable/table_row_bg"
+            android:padding="15dp">
 
             <TextView
                 android:id="@+id/txtDefense"
@@ -135,11 +133,10 @@
         </TableRow>
 
         <TableRow
-            android:background="@drawable/table_row_bg"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="15dp"
-            >
+            android:background="@drawable/table_row_bg"
+            android:padding="15dp">
 
             <TextView
                 android:id="@+id/txtSpAtk"
@@ -157,11 +154,10 @@
         </TableRow>
 
         <TableRow
-            android:background="@drawable/table_row_bg"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="15dp"
-            >
+            android:background="@drawable/table_row_bg"
+            android:padding="15dp">
 
             <TextView
                 android:id="@+id/txtSpDef"
@@ -179,11 +175,10 @@
         </TableRow>
 
         <TableRow
-            android:background="@drawable/last_row_border"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="15dp"
-            >
+            android:background="@drawable/last_row_border"
+            android:padding="15dp">
 
             <TextView
                 android:id="@+id/txtSpeed"
