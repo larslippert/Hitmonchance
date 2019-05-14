@@ -13,8 +13,9 @@ public class Pokemon implements Serializable {
     private long spattack;
     private long spdefense;
     private long speed;
+    private String image;
 
-    public Pokemon(long Id,String Name,String Type1, String Type2, long Speed, long Spdefense, long Spattack, long Defense, long Attack, long Hp){
+    public Pokemon(long Id,String Name,String Type1, String Type2, long Speed, long Spdefense, long Spattack, long Defense, long Attack, long Hp, String Image){
         this.id = Id;
         this.name = Name;
         this.type1 = Type1;
@@ -25,6 +26,7 @@ public class Pokemon implements Serializable {
         this.spattack = Spattack;
         this.spdefense = Spdefense;
         this.speed = Speed;
+        this.image = Image;
     }
 
     public long getId(){
@@ -76,4 +78,7 @@ public class Pokemon implements Serializable {
         return speed;
     }
     public void setSpeed(long speed) {this.speed = speed;}
+
+    public String getImage() {return image;}
+    public void setImage(String image) {this.image = image;}
 }

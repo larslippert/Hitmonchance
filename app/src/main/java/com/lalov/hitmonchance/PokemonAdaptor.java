@@ -56,8 +56,7 @@ public class PokemonAdaptor extends BaseAdapter {
 
         pokemon = pokemons.get(position);
         if(pokemon !=null){
-            String PokemonImageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png";
-            new DownloadImageTask((ImageView) convertView.findViewById(R.id.imageViewPokemon)).execute(PokemonImageUrl);
+            new DownloadImageTask((ImageView) convertView.findViewById(R.id.imageViewPokemon)).execute(pokemon.getImage());
 
             TextView adaptorName = (TextView) convertView.findViewById(R.id.txtName);
             adaptorName.setText(context.getResources().getString(R.string.name)+ " " +pokemon.getName());

@@ -10,6 +10,7 @@ import java.io.InputStream;
 
 public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
 
+    // Inspiration from https://stackoverflow.com/questions/2471935/how-to-load-an-imageview-by-url-in-android
     ImageView bmImage;
 
     public DownloadImageTask(ImageView bmImage) {
