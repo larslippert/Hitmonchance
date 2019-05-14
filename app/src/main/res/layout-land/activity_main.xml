@@ -6,87 +6,125 @@
     android:layout_height="match_parent"
     tools:context=".Activities.MainActivity">
 
-    <ListView
+    <com.baoyz.swipemenulistview.SwipeMenuListView
         android:id="@+id/ListViewPokedex"
-        android:layout_width="354dp"
+        android:layout_width="268dp"
         android:layout_height="303dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.025"
+        app:layout_constraintHorizontal_bias="0.037"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.6" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textViewPokedex"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginStart="75dp"
+        android:layout_marginLeft="75dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginRight="30dp"
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:text="@string/pokedex"
-        android:textColor="#0D3FA0"
+        android:textColor="@color/colorRedPokedex"
         android:textSize="22sp"
-        app:layout_constraintBottom_toTopOf="@+id/editTextAdd"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.492"
-        app:layout_constraintStart_toEndOf="@+id/ListViewPokedex"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.066" />
-
-    <ImageButton
-        android:id="@+id/imgBtnLogout"
-        android:layout_width="31dp"
-        android:layout_height="28dp"
-        android:background="@android:color/transparent"
-        app:srcCompat="@drawable/ic_exit_to_app_black_24dp"
-        tools:layout_editor_absoluteX="394dp"
-        tools:layout_editor_absoluteY="16dp" />
+        app:layout_constraintEnd_toStartOf="@+id/imgBtnMusic"
+        app:layout_constraintHorizontal_bias="0.733"
+        app:layout_constraintStart_toEndOf="@+id/imgBtnLogout"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/btnAdd"
-        android:layout_width="305dp"
+        android:layout_width="255dp"
         android:layout_height="46dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="52dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:background="#0D3FA0"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="56dp"
+        android:layout_marginRight="56dp"
+        android:layout_marginBottom="40dp"
+        android:background="@color/colorRedPokedex"
         android:text="@string/add"
         android:textColor="@android:color/background_light"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.166"
+        app:layout_constraintHorizontal_bias="0.625"
         app:layout_constraintStart_toEndOf="@+id/ListViewPokedex"
         app:layout_constraintTop_toBottomOf="@+id/editTextAdd" />
 
     <EditText
         android:id="@+id/editTextAdd"
-        android:layout_width="300dp"
+        android:layout_width="234dp"
         android:layout_height="47dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="136dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginTop="208dp"
+        android:layout_marginEnd="56dp"
+        android:layout_marginRight="56dp"
         android:ems="10"
         android:hint="@string/add"
         android:inputType="text"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.31"
+        app:layout_constraintHorizontal_bias="0.58"
         app:layout_constraintStart_toEndOf="@+id/ListViewPokedex"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewPokedex" />
+
+    <ImageButton
+        android:id="@+id/imgBtnLogout"
+        android:layout_width="31dp"
+        android:layout_height="28dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginBottom="12dp"
+        android:background="@android:color/transparent"
+        app:layout_constraintBottom_toTopOf="@+id/ListViewPokedex"
+        app:layout_constraintStart_toEndOf="@+id/textViewLogout"
+        app:srcCompat="@drawable/ic_exit_to_app_black_24dp" />
+
+    <ImageButton
+        android:id="@+id/imgBtnMusic"
+        android:layout_width="31dp"
+        android:layout_height="28dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="8dp"
+        android:background="@android:color/transparent"
+        app:layout_constraintBottom_toTopOf="@+id/ListViewPokedex"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_music_note_black_24dp" />
+
+    <TextView
+        android:id="@+id/textViewUser"
+        android:layout_width="106dp"
+        android:layout_height="16dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginEnd="295dp"
+        android:layout_marginRight="295dp"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toTopOf="@+id/imgBtnLogout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewLogout"
+        android:layout_width="45dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="16dp"
+        android:text="@string/Logout"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toTopOf="@+id/ListViewPokedex"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </android.support.constraint.ConstraintLayout>
