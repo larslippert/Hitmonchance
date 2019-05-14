@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".Activities.MainActivity">
 
-    <ListView
+    <com.baoyz.swipemenulistview.SwipeMenuListView
         android:id="@+id/ListViewPokedex"
         android:layout_width="0dp"
         android:layout_height="401dp"

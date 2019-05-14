@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.media.MediaPlayer;
 import android.os.IBinder;
@@ -26,6 +28,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.baoyz.swipemenulistview.SwipeMenu;
+import com.baoyz.swipemenulistview.SwipeMenuCreator;
+import com.baoyz.swipemenulistview.SwipeMenuItem;
+import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -53,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
     //TODO Error where pokemon is added to list twice
 
     private PokemonAdaptor pokemonAdaptor;
-    private ListView pokemonListView;
+    private SwipeMenuListView pokemonListView;
     private ArrayList<Pokemon> pokemonList;
     Button btnAddPokemon;
     ImageButton imgBtnSettings, imgBtnMusic;
@@ -116,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
 
         checkPermissions();
 
-        pokemonListView = (ListView) findViewById(R.id.ListViewPokedex);
+        pokemonListView = (SwipeMenuListView) findViewById(R.id.ListViewPokedex);
         btnAddPokemon = findViewById(R.id.btnAdd);
         txtSearchPokemon = findViewById(R.id.editTextAdd);
         imgBtnSettings = findViewById(R.id.imgBtnLogout);
@@ -190,6 +196,40 @@ public class MainActivity extends AppCompatActivity {
                     pokemonIntroSong.release();
                     pokemonIntroSong = null;
                 }
+            }
+        });
+
+        SwipeMenuCreator creator = new SwipeMenuCreator() {
+
+            @Override
+            public void create(SwipeMenu menu) {
+                // create "delete" item
+                SwipeMenuItem deleteItem = new SwipeMenuItem(
+                        getApplicationContext());
+                // set item background
+                deleteItem.setBackground(R.color.colorRedPokedex);
+                // set item width
+                deleteItem.setWidth(250);
+                // set a title
+                deleteItem.setTitle("Delete");
+                // set a title size
+                deleteItem.setTitleSize(18);
+                // set a title color
+                deleteItem.setTitleColor(Color.BLACK);
+                // add to menu
+                menu.addMenuItem(deleteItem);
+            }
+        };
+
+        // set creator
+        pokemonListView.setMenuCreator(creator);
+
+        pokemonListView.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
+                Log.d("LOG","Deleted: " + position);
+                // false : close the menu; true : not close the menu
+                return false;
             }
         });
 
