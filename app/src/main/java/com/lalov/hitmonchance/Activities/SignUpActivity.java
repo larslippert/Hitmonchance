@@ -64,11 +64,11 @@ public class SignUpActivity extends AppCompatActivity {
 
     private void SignUp() {
         if (TextUtils.isEmpty(txtUsername.getText())) {
-            txtUsername.setError("Pls enter a username"); //TODO Externalize
+            txtUsername.setError(getResources().getString(R.string.enterusername));
             return;
         }
         if (radioGroupStarter.getCheckedRadioButtonId() == -1) {
-            radioButtonSquirtle.setError("Pls choose a starter pokemon"); //TODO Externalize
+            radioButtonSquirtle.setError(getResources().getString(R.string.choosestarter));
             return;
         }
 

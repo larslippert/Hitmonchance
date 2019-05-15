@@ -26,4 +26,23 @@
     <string name="gotopokedex">Gå til pokedex</string>
     <string name="tie">I var lige stærke!</string>
     <string name="type">Type:</string>
+    <string name="txtHP">HP</string>
+    <string name="txtAttack">Angreb</string>
+    <string name="txtDefense">Forsvar</string>
+    <string name="txtSpAtk">Sp. Angreb</string>
+    <string name="txtSpDef">Sp. Forsvar</string>
+    <string name="txtSpeed">Hurtighed</string>
+    <string name="txtDexNo">Dex Nr:</string>
+    <string name="choose_opponent">Vælg Modstander</string>
+    <string name="battle">Kæmp!</string>
+    <string name="walk">Gå 500m for at kæmpe igen</string>
+    <string name="location">Du bliver nødt til at tilføje location for at bruge appen</string>
+    <string name="email">Pls skriv din email addresse</string>
+    <string name="password">Pls skriv dit kodeord</string>
+    <string name="kortkodeord">Kodeordet er for kort bøsserøv</string>
+    <string name="signupfailed">Oprettelse fejlede</string>
+    <string name="emailpasswordnotgood">Email eller kodeord er totalt bøsset</string>
+    <string name="pokemonname">Venligst indtast navn på en pokemon</string>
+    <string name="enterusername">Pls skriv brugernavn</string>
+    <string name="choosestarter">Pls vælg en begynder pokemon</string>
 </resources>
