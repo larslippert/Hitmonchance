@@ -157,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
                 }
                 else {
-                    Toast.makeText(MainActivity.this, "You need to walk 500 meters to battle!", Toast.LENGTH_LONG).show(); //TODO Externalize
+                    Toast.makeText(MainActivity.this, getResources().getString(R.string.walk), Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -179,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
                     txtSearchPokemon.getText().clear();
                 }
                 else {
-                    txtSearchPokemon.setError("Please enter the name of a Pokemon"); //TODO Externalize
+                    txtSearchPokemon.setError(getResources().getString(R.string.pokemonname));
                 }
             }
         });
@@ -312,7 +312,7 @@ public class MainActivity extends AppCompatActivity {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 } else {
-                    Toast.makeText(this, "You need to enable permission for Location to use the app", Toast.LENGTH_SHORT).show(); //TODO Externalize
+                    Toast.makeText(this, getResources().getString(R.string.location), Toast.LENGTH_SHORT).show();
                     finish();
                 }
                 return;

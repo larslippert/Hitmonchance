@@ -34,4 +34,14 @@
     <string name="choose_opponent">Choose Opponent</string>
     <string name="battle">Battle!</string>
     <string name="type">Type:</string>
+    <string name="walk">Walk 500 meters to battle again</string>
+    <string name="location">You need to enable permission for Location to use the app</string>
+    <string name="email">Pls enter email address</string>
+    <string name="password">Pls enter password</string>
+    <string name="kortkodeord">Password is too short faggot</string>
+    <string name="signupfailed">Sign up failed</string>
+    <string name="emailpasswordnotgood">Email or password is gay as shit</string>
+    <string name="pokemonname">Please enter the name of a Pokemon</string>
+    <string name="enterusername">Pls enter a username</string>
+    <string name="choosestarter">Pls choose a starter pokemon</string>
 </resources>
