@@ -13,6 +13,6 @@ public final class Globals {
     public final static String BROADCAST_RESULT_LOCATION = "broadcast_result_location";
     public final static int REQUEST_CODE_SIGNUP = 100;
     public final static int PERMISSIONS_REQUEST_LOCATION = 200;
-    public final static int METERS_TO_WALK = 500;
-    public final static int TIME_TO_PASS = 4;
+    public final static int METERS_TO_WALK = 10;
+    public final static int TIME_TO_PASS = 0;
 }
