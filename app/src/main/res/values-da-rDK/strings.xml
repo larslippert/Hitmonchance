@@ -45,4 +45,5 @@
     <string name="pokemonname">Venligst indtast navn på en pokemon</string>
     <string name="enterusername">Pls skriv brugernavn</string>
     <string name="choosestarter">Pls vælg en begynder pokemon</string>
+    <string name="txtTotal">Total stats</string>
 </resources>

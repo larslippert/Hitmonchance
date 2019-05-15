@@ -44,4 +44,5 @@
     <string name="pokemonname">Please enter the name of a Pokemon</string>
     <string name="enterusername">Pls enter a username</string>
     <string name="choosestarter">Pls choose a starter pokemon</string>
+    <string name="txtTotal">Total stats</string>
 </resources>

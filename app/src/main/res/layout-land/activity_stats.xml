@@ -46,7 +46,7 @@
 
     <TableLayout
         android:layout_width="360dp"
-        android:layout_height="292dp"
+        android:layout_height="273dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="25dp"
         android:layout_marginRight="25dp"
@@ -59,7 +59,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/table_row_bg"
-            android:padding="15dp">
+            android:padding="10dp">
 
             <TextView
                 android:id="@+id/txtHP"
@@ -81,7 +81,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/table_row_bg"
-            android:padding="15dp">
+            android:padding="10dp">
 
             <TextView
                 android:id="@+id/txtAttack"
@@ -102,7 +102,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/table_row_bg"
-            android:padding="15dp">
+            android:padding="10dp">
 
             <TextView
                 android:id="@+id/txtDefense"
@@ -123,7 +123,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/table_row_bg"
-            android:padding="15dp">
+            android:padding="10dp">
 
             <TextView
                 android:id="@+id/txtSpAtk"
@@ -144,7 +144,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/table_row_bg"
-            android:padding="15dp">
+            android:padding="10dp">
 
             <TextView
                 android:id="@+id/txtSpDef"
@@ -165,7 +165,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/last_row_border"
-            android:padding="15dp">
+            android:padding="10dp">
 
             <TextView
                 android:id="@+id/txtSpeed"
@@ -177,6 +177,27 @@
 
             <TextView
                 android:id="@+id/txtSpeedStat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/last_row_border"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/txtTotal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/table_cell_bg"
+                android:paddingRight="10dp"
+                android:text="@string/txtTotal" />
+
+            <TextView
+                android:id="@+id/txtTotalStats"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dp" />

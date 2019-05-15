@@ -22,7 +22,7 @@ import static com.lalov.hitmonchance.Globals.SERVICE_TAG;
 //TODO Could add wins and loses count
 public class StatsActivity extends AppCompatActivity {
     TextView txtName, txtDexNo, txtHP, txtHPStat, txtAttack, txtAttackStat, txtDefense, txtDefenseStat
-            ,txtSpAtk, txtSpAtkStat, txtSpDef, txtSpDefStat, txtSpeed, txtSpeedStat;
+            ,txtSpAtk, txtSpAtkStat, txtSpDef, txtSpDefStat, txtSpeed, txtSpeedStat, txtTotalStats;
     ImageView imgPokemon;
 
     private ServiceConnection pokemonServiceConnection;
@@ -56,6 +56,7 @@ public class StatsActivity extends AppCompatActivity {
         txtSpeed = findViewById(R.id.txtSpeed);
         txtSpeedStat = findViewById(R.id.txtSpeedStat);
         imgPokemon = findViewById(R.id.imageView);
+        txtTotalStats = findViewById(R.id.txtTotalStats);
 
     }
 
@@ -84,6 +85,8 @@ public class StatsActivity extends AppCompatActivity {
         txtSpAtkStat.setText(Long.toString(selectedPokemon.getSpattack()));
         txtSpDefStat.setText(Long.toString(selectedPokemon.getSpdefense()));
         txtSpeedStat.setText(Long.toString(selectedPokemon.getSpeed()));
+        txtTotalStats.setText(Long.toString(calculateTotalStats(selectedPokemon)));
+
     }
 
     private void SetupConnectionToPokemonService() {
@@ -111,5 +114,17 @@ public class StatsActivity extends AppCompatActivity {
         super.onDestroy();
 
         UnBindFromPokemonService();
+    }
+
+    private Long calculateTotalStats(Pokemon pokemon){
+        long hp = pokemon.getHp();
+        long attack = pokemon.getAttack();
+        long defense = pokemon.getDefense();
+        long spAttack = pokemon.getSpattack();
+        long spDefense = pokemon.getSpdefense();
+        long speed = pokemon.getSpeed();
+
+        Long totalStat = hp+attack+defense+spAttack+spDefense+speed;
+        return totalStat;
     }
 }
