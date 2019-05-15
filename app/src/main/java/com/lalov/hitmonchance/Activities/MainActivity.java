@@ -227,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
         pokemonListView.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
-                Log.d("LOG","Deleted: " + position);
+                pokemonService.DeletePokemonDatabase(pokemonList.get(position).getName());
                 // false : close the menu; true : not close the menu
                 return false;
             }

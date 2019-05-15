@@ -230,7 +230,7 @@ public class PokemonService extends Service {
                 Pokemon pokemon = InterpretPokemonJSON(response);
                 if (pokemon != null) {
                     AddPokemonDatabase(pokemon);
-                    pokemonList.add(pokemon);
+                    //pokemonList.add(pokemon);
 
                     Intent broadcastIntent = new Intent(BROADCAST_RESULT_POKEMON);
                     bmPokemon.sendBroadcast(broadcastIntent);
@@ -336,7 +336,7 @@ public class PokemonService extends Service {
         _pokemon.put("HP", pokemon.getHp());
         _pokemon.put("ImageUrl", pokemon.getImage());
 
-        db.collection("Users").document(currentUser.getUid()).collection("Pokemon").document()
+        db.collection("Users").document(currentUser.getUid()).collection("Pokemon").document(pokemon.getName())
                 .set(_pokemon)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -348,6 +348,23 @@ public class PokemonService extends Service {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.d(FIRESTORE_TAG, "Pokemon was not added! Error!");
+                    }
+                });
+    }
+
+    public void DeletePokemonDatabase(String pokemonName) {
+        docRef.collection("Pokemon").document(pokemonName)
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(FIRESTORE_TAG, "SUCCESS: Pokemon deleted");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(FIRESTORE_TAG, "ERROR: Pokemon not deleted");
                     }
                 });
     }
