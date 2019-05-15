@@ -91,6 +91,8 @@ public class BattleActivity extends AppCompatActivity {
         btnBattle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                pokemonBattleSong.stop();
+                pokemonBattleSong.release();
                 determinateWinner(calculateTotalStats(usersSelectedPokemon), calculateTotalStats(enemiesSelectedPokemon));
 
                 pokemonService.AddBattleLocationAndTime();
@@ -221,9 +223,13 @@ public class BattleActivity extends AppCompatActivity {
         if(result < userStats){
             txtWinner.setTextColor(Color.GREEN);
             txtWinner.setText(getResources().getString(R.string.win));
+            pokemonBattleSong = MediaPlayer.create(this,R.raw.winner_music);
+            pokemonBattleSong.start();
         }else {
             txtWinner.setTextColor(Color.RED);
             txtWinner.setText(getResources().getString(R.string.lose));
+            pokemonBattleSong = MediaPlayer.create(this,R.raw.loser_music);
+            pokemonBattleSong.start();
         }
     }
 
