@@ -566,6 +566,9 @@ public class PokemonService extends Service {
      *  ######################################################################################## */
 
     private void SetBattleDatabaseListener() {
+        battleLocation = new Location("");
+        battleTime = new Date();
+
         db.collection("Users").document(currentUser.getUid()).collection("Battle").document("LatestBattle")
                 .addSnapshotListener(new EventListener<DocumentSnapshot>() {
                     @Override
@@ -618,6 +621,8 @@ public class PokemonService extends Service {
     }
 
     private void SetPokemonListListener() {
+        pokemonList = new ArrayList<Pokemon>();
+
         db.collection("Users").document(currentUser.getUid()).collection("Pokemon")
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
