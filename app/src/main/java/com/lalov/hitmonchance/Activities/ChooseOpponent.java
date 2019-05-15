@@ -21,7 +21,6 @@ import com.lalov.hitmonchance.R;
 import com.lalov.hitmonchance.UserAdaptor;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static com.lalov.hitmonchance.Globals.BROADCAST_RESULT_USERS;
 import static com.lalov.hitmonchance.Globals.SERVICE_TAG;
@@ -59,7 +58,7 @@ public class ChooseOpponent extends AppCompatActivity {
         getWindow().setLayout((int) (width*.8), (int) (height*.8));
 
         SetupConnectionToPokemonService();
-        BindToMovieService();
+        BindToPokemonService();
 
         LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiverUsers,
                 new IntentFilter(BROADCAST_RESULT_USERS));
@@ -85,7 +84,7 @@ public class ChooseOpponent extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
 
-        UnBindFromMovieService();
+        UnBindFromPokemonService();
     }
 
     private void InitUsers() {
@@ -94,7 +93,7 @@ public class ChooseOpponent extends AppCompatActivity {
         userListView.setAdapter(userAdaptor);
     }
 
-    private void BindToMovieService() {
+    private void BindToPokemonService() {
         if (!bound) {
             bindService(new Intent(ChooseOpponent.this, PokemonService.class),
                     pokemonServiceConnection, Context.BIND_AUTO_CREATE);
@@ -102,7 +101,7 @@ public class ChooseOpponent extends AppCompatActivity {
         }
     }
 
-    private void UnBindFromMovieService() {
+    private void UnBindFromPokemonService() {
         if (bound) {
             unbindService(pokemonServiceConnection);
             bound = false;
