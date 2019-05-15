@@ -79,11 +79,11 @@ public class LoginActivity extends AppCompatActivity {
         final String password = txtPassword.getText().toString().trim();
 
         if (TextUtils.isEmpty(email)) {
-            Toast.makeText(this,"Pls enter email address",Toast.LENGTH_LONG).show();//TODO Externalize
+            Toast.makeText(this,getResources().getString(R.string.email),Toast.LENGTH_LONG).show();
             return;
         }
         if (TextUtils.isEmpty(password)) {
-            Toast.makeText(this,"Pls enter password", Toast.LENGTH_LONG).show();//TODO Externalize
+            Toast.makeText(this,getResources().getString(R.string.password), Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -93,10 +93,10 @@ public class LoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (!task.isSuccessful()) {
                             if (password.length() < 6) {
-                                txtPassword.setError("Password is too short faggot"); //TODO Externalize
+                                txtPassword.setError(getResources().getString(R.string.kortkodeord));
                             }
                             else {
-                                Toast.makeText(LoginActivity.this, "Sign up failed", Toast.LENGTH_LONG).show();
+                                Toast.makeText(LoginActivity.this, getResources().getString(R.string.signupfailed), Toast.LENGTH_LONG).show();
                             }
                         }
                         else {
@@ -112,11 +112,11 @@ public class LoginActivity extends AppCompatActivity {
         final String password = txtPassword.getText().toString().trim();
 
         if (TextUtils.isEmpty(email)) {
-            Toast.makeText(this,"Pls enter email address",Toast.LENGTH_LONG).show();//TODO Externalize
+            Toast.makeText(this,getResources().getString(R.string.email),Toast.LENGTH_LONG).show();
             return;
         }
         if (TextUtils.isEmpty(password)) {
-            Toast.makeText(this,"Pls enter password", Toast.LENGTH_LONG).show();//TODO Externalize
+            Toast.makeText(this,getResources().getString(R.string.password), Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -125,7 +125,7 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (!task.isSuccessful()) {
-                            txtPassword.setError("Email or password is gay as shit"); //TODO Externalize
+                            txtPassword.setError(getResources().getString(R.string.emailpasswordnotgood));
                         }
                         else {
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);

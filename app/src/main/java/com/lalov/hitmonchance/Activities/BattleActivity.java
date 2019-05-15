@@ -98,7 +98,7 @@ public class BattleActivity extends AppCompatActivity {
                 pokemonService.AddBattleLocationAndTime();
 
                 btnBattle.setBackgroundColor(Color.GRAY);
-                btnBattle.setText("Walk 500 meters to battle again"); //TODO Externalize
+                btnBattle.setText(getResources().getString(R.string.walk));
                 btnBattle.setEnabled(false);
             }
         });
@@ -123,7 +123,7 @@ public class BattleActivity extends AppCompatActivity {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 } else {
-                    Toast.makeText(this, "You need to enable permission for Location to use the app", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getResources().getString(R.string.location), Toast.LENGTH_SHORT).show();
                     finish();
                 }
                 return;
@@ -131,7 +131,7 @@ public class BattleActivity extends AppCompatActivity {
         }
     }
 
-    // Method for setting om connection to service
+    // Method for setting up connection to service
     // Inspired from ServiceDemo
     private void setupConnectionToPokemonService(){
         pokemonServiceConnection = new ServiceConnection() {
@@ -172,18 +172,6 @@ public class BattleActivity extends AppCompatActivity {
             bound = false;
         }
     }
-
-    // Set up details with the correct pokemon
-    private void getSelectedPokemon(Pokemon pokemon, boolean UserOrEnemy){
-        Long totalStats = calculateTotalStats(pokemon);
-        if(UserOrEnemy){
-            txtUsersPokemonName.setText(pokemon.getName());
-            txtUsersPokemonStats.setText(Long.toString(totalStats));
-        }else{
-            txtEnemiesPokemonName.setText(pokemon.getName());
-            txtEnemiesPokemonStats.setText(Long.toString(totalStats));
-        }
-    } //TODO Delete
 
     private void InitPokemon() {
         new DownloadImageTask((ImageView) findViewById(R.id.imageViewUserPokemon)).execute(usersSelectedPokemon.getImage());
