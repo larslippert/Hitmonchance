@@ -9,7 +9,6 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.media.MediaPlayer;
 import android.os.IBinder;
@@ -24,7 +23,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,7 +39,6 @@ import com.lalov.hitmonchance.PokemonAdaptor;
 import com.lalov.hitmonchance.PokemonService;
 import com.lalov.hitmonchance.R;
 
-import java.time.Period;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -109,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         SetupConnectionToPokemonService();
-        BindToMovieService();
+        BindToPokemonService();
 
         LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiverPokemon,
                 new IntentFilter(BROADCAST_RESULT_POKEMON));
@@ -250,7 +247,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
 
-        UnBindFromMovieService();
+        UnBindFromPokemonService();
     }
 
     /** ########################################################################################
@@ -320,7 +317,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void BindToMovieService() {
+    private void BindToPokemonService() {
         if (!bound) {
             bindService(new Intent(MainActivity.this, PokemonService.class),
                     pokemonServiceConnection, Context.BIND_AUTO_CREATE);
@@ -328,7 +325,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void UnBindFromMovieService() {
+    private void UnBindFromPokemonService() {
         if (bound) {
             unbindService(pokemonServiceConnection);
             bound = false;
