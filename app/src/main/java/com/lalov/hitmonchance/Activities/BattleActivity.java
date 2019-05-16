@@ -47,6 +47,8 @@ public class BattleActivity extends AppCompatActivity {
     private Pokemon usersSelectedPokemon;
     private Pokemon enemiesSelectedPokemon;
 
+    boolean battle = false;
+
     private BroadcastReceiver broadcastReceiverPokemon = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -81,6 +83,24 @@ public class BattleActivity extends AppCompatActivity {
         pokemonBattleSong = MediaPlayer.create(getApplicationContext(), R.raw.battle_music);
         pokemonBattleSong.start();
 
+        if(savedInstanceState != null){
+            txtWinner.setText((savedInstanceState.getString("Winner")));
+            battle = savedInstanceState.getBoolean("Battle");
+            if(battle){
+                btnBattle.setBackgroundColor(Color.GRAY);
+                btnBattle.setText(getResources().getString(R.string.walk));
+                btnBattle.setEnabled(false);
+
+                if(txtWinner.getText().equals(getResources().getString(R.string.win))){
+                    txtWinner.setTextColor(Color.GREEN);
+                }
+                else{
+                    txtWinner.setTextColor(Color.RED);
+                }
+            }
+
+        }
+
         btnGoToPokedex.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -100,6 +120,7 @@ public class BattleActivity extends AppCompatActivity {
                 btnBattle.setBackgroundColor(Color.GRAY);
                 btnBattle.setText(getResources().getString(R.string.walk));
                 btnBattle.setEnabled(false);
+                battle = true;
             }
         });
     }
@@ -226,5 +247,12 @@ public class BattleActivity extends AppCompatActivity {
         super.onPause();
         pokemonBattleSong.stop();
         pokemonBattleSong.release();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("Winner", String.valueOf(txtWinner.getText()));
+        outState.putBoolean("Battle",battle);
     }
 }
