@@ -1,7 +1,7 @@
 package com.lalov.hitmonchance;
 
 import java.io.Serializable;
-
+// inspiration from demo with listview
 public class Pokemon implements Serializable {
     private long id;
     private String name;

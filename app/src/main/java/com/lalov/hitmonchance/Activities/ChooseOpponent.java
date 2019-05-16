@@ -26,7 +26,7 @@ import static com.lalov.hitmonchance.Globals.BROADCAST_RESULT_USERS;
 import static com.lalov.hitmonchance.Globals.SERVICE_TAG;
 
 public class ChooseOpponent extends AppCompatActivity {
-
+    // Adaptor
     private UserAdaptor userAdaptor;
     private ArrayList<String> userList;
 
@@ -55,9 +55,9 @@ public class ChooseOpponent extends AppCompatActivity {
 
         int width = dm.widthPixels;
         int height = dm.heightPixels;
-
+        // Sets size of window
         getWindow().setLayout((int) (width*.8), (int) (height*.8));
-
+        // Connection to service
         SetupConnectionToPokemonService();
         BindToPokemonService();
 
@@ -65,7 +65,7 @@ public class ChooseOpponent extends AppCompatActivity {
                 new IntentFilter(BROADCAST_RESULT_USERS));
 
         userListView = (ListView) findViewById(R.id.listViewUsers);
-
+        // Choose an opponent
         userListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
