@@ -32,6 +32,7 @@ public class ChooseOpponent extends AppCompatActivity {
 
     private ListView userListView;
 
+    // For service
     private ServiceConnection pokemonServiceConnection;
     private PokemonService pokemonService;
     private boolean bound = false;

@@ -37,13 +37,13 @@
     <string name="battle">Kæmp!</string>
     <string name="walk">Gå 500m for at kæmpe igen</string>
     <string name="location">Du bliver nødt til at tilføje location for at bruge appen</string>
-    <string name="email">Pls skriv din email addresse</string>
-    <string name="password">Pls skriv dit kodeord</string>
-    <string name="kortkodeord">Kodeordet er for kort bøsserøv</string>
+    <string name="email">Skriv venligst din email addresse</string>
+    <string name="password">Skriv venligst dit kodeord</string>
+    <string name="kortkodeord">"Kodeordet er for kort "</string>
     <string name="signupfailed">Oprettelse fejlede</string>
-    <string name="emailpasswordnotgood">Email eller kodeord er totalt bøsset</string>
-    <string name="pokemonname">Venligst indtast navn på en pokemon</string>
-    <string name="enterusername">Pls skriv brugernavn</string>
-    <string name="choosestarter">Pls vælg en begynder pokemon</string>
+    <string name="emailpasswordnotgood">Email eller kodeord er forkert</string>
+    <string name="pokemonname">Venligst indtast navnet på en pokemon</string>
+    <string name="enterusername">Skriv venligst brugernavn</string>
+    <string name="choosestarter">Vælg venligst en begynder pokemon</string>
     <string name="txtTotal">Total stats</string>
 </resources>
