@@ -48,12 +48,16 @@ public class BattleActivity extends AppCompatActivity {
     private Pokemon enemiesSelectedPokemon;
 
     boolean battle = false;
+    boolean opponentChosen = true;
 
     private BroadcastReceiver broadcastReceiverPokemon = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            enemiesSelectedPokemon = pokemonService.GetOpponentPokemon();
-            InitPokemon();
+             if(opponentChosen){
+                 enemiesSelectedPokemon = pokemonService.GetOpponentPokemon();
+             }
+             opponentChosen = false;
+             InitPokemon();
         }
     };
     MediaPlayer pokemonBattleSong;
@@ -86,6 +90,8 @@ public class BattleActivity extends AppCompatActivity {
         if(savedInstanceState != null){
             txtWinner.setText((savedInstanceState.getString("Winner")));
             battle = savedInstanceState.getBoolean("Battle");
+            enemiesSelectedPokemon = (Pokemon) savedInstanceState.getSerializable("Pokemon");
+            opponentChosen = savedInstanceState.getBoolean("Opponent");
             if(battle){
                 btnBattle.setBackgroundColor(Color.GRAY);
                 btnBattle.setText(getResources().getString(R.string.walk));
@@ -254,5 +260,7 @@ public class BattleActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
         outState.putString("Winner", String.valueOf(txtWinner.getText()));
         outState.putBoolean("Battle",battle);
+        outState.putSerializable("Pokemon",enemiesSelectedPokemon);
+        outState.putBoolean("Opponent",opponentChosen);
     }
 }
