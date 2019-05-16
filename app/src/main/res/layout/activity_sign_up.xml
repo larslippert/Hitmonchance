@@ -61,7 +61,7 @@
 
     <TextView
         android:id="@+id/txtChooseStarter"
-        android:layout_width="378dp"
+        android:layout_width="0dp"
         android:layout_height="45dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
@@ -94,7 +94,7 @@
 
     <RadioGroup
         android:id="@+id/radioGroupStarter"
-        android:layout_width="379dp"
+        android:layout_width="0dp"
         android:layout_height="41dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"

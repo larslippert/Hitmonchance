@@ -45,33 +45,47 @@
         android:id="@+id/textViewEnemyName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         android:text="@string/name"
-        app:layout_constraintStart_toStartOf="@+id/imageViewEnemyPokemon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.08"
+        app:layout_constraintStart_toEndOf="@+id/textViewWinner"
         app:layout_constraintTop_toBottomOf="@+id/imageViewEnemyPokemon" />
 
     <TextView
         android:id="@+id/textViewUserLevel"
-        android:layout_width="wrap_content"
+        android:layout_width="164dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginStart="68dp"
+        android:layout_marginLeft="68dp"
+        android:layout_marginTop="24dp"
         android:text="@string/totalstats"
-        app:layout_constraintStart_toStartOf="@+id/imageViewUserPokemon"
-        app:layout_constraintTop_toBottomOf="@+id/textViewUserName" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textViewUserName" />
 
     <TextView
         android:id="@+id/textViewEnemyLevel"
-        android:layout_width="wrap_content"
+        android:layout_width="178dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         android:text="@string/totalstats"
-        app:layout_constraintStart_toStartOf="@+id/imageViewEnemyPokemon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.388"
+        app:layout_constraintStart_toEndOf="@+id/textViewWinner"
         app:layout_constraintTop_toBottomOf="@+id/textViewEnemyName" />
 
     <Button
         android:id="@+id/buttonGoToPokedex"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginEnd="8dp"
@@ -88,33 +102,32 @@
     <Button
         android:id="@+id/btnBattle"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginBottom="9dp"
+        android:layout_marginBottom="8dp"
         android:background="@color/colorRedPokedex"
         android:text="@string/battle"
         android:textColor="@android:color/background_light"
         app:layout_constraintBottom_toTopOf="@+id/buttonGoToPokedex"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewWinner"
+        app:layout_constraintVertical_bias="0.914" />
 
     <TextView
         android:id="@+id/textViewWinner"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="37dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="164dp"
         android:textSize="36sp"
-        app:layout_constraintBottom_toTopOf="@+id/btnBattle"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.446"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toEndOf="@+id/textViewUserLevel"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

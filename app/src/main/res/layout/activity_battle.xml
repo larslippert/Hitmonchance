@@ -54,16 +54,18 @@
 
     <TextView
         android:id="@+id/textViewUserLevel"
-        android:layout_width="wrap_content"
+        android:layout_width="163dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginLeft="32dp"
         android:layout_marginTop="20dp"
         android:text="@string/totalstats"
-        app:layout_constraintStart_toStartOf="@+id/imageViewUserPokemon"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewUserName" />
 
     <TextView
         android:id="@+id/textViewEnemyLevel"
-        android:layout_width="wrap_content"
+        android:layout_width="139dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
