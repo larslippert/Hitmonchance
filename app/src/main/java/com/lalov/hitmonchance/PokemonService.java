@@ -60,7 +60,7 @@ import static com.lalov.hitmonchance.Globals.LOCATION_TAG;
 import static com.lalov.hitmonchance.Globals.POKE_API_CALL;
 
 public class PokemonService extends Service {
-
+// Class is inspired by ServicesDemo, L6
     private Context mContext;
     private ArrayList<Pokemon> pokemonList;
     private Pokemon opponentPokemon;
@@ -155,7 +155,7 @@ public class PokemonService extends Service {
 
     public void CreateUser(String username) {
         AddUserDatabase(username);
-    } //TODO Maybe not needed, just go straight to database call
+    }
 
     public ArrayList<Pokemon> GetAllPokemon() {
         return pokemonList;
@@ -216,6 +216,7 @@ public class PokemonService extends Service {
      *  ######### API CALL #####################################################################
      *  ######################################################################################## */
 
+    // Method inspired by WeatherServiceDemo, L7
     public void AddPokemon(String name) {
         String url = POKE_API_CALL + name;
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
@@ -252,7 +253,7 @@ public class PokemonService extends Service {
 
 
 
-
+    // Method inspired by WeatherServiceDemo, L7
     private Pokemon InterpretPokemonJSON(String jsonResponse) {
         Gson gson = new GsonBuilder().create();
         PokeAPI pokeAPI = gson.fromJson(jsonResponse, PokeAPI.class);

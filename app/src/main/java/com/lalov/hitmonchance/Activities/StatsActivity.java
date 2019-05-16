@@ -90,7 +90,7 @@ public class StatsActivity extends AppCompatActivity {
                 pokemonService = ((PokemonService.PokemonServiceBinder)service).getService();
                 Log.d(SERVICE_TAG, "StatsActivity connected to pokemon service");
 
-                final Intent intent = getIntent(); //TODO This might cause problems later, should be changed
+                final Intent intent = getIntent(); 
 
                 usersSelectedPokemon = pokemonService.GetPokemon(intent.getIntExtra("position",0));
                 setStats(usersSelectedPokemon);
@@ -110,6 +110,7 @@ public class StatsActivity extends AppCompatActivity {
         UnBindFromPokemonService();
     }
 
+    // Method is the same as in battle-activity
     private Long calculateTotalStats(Pokemon pokemon){
         long hp = pokemon.getHp();
         long attack = pokemon.getAttack();

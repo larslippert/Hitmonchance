@@ -317,6 +317,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // Bind and unbind are inspired by ServicesDemo, L6. These are also used in other activities
     private void BindToPokemonService() {
         if (!bound) {
             bindService(new Intent(MainActivity.this, PokemonService.class),
@@ -332,6 +333,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // Method inspired by ServicesDemo, L6. Modified version also used in other activities
     private void SetupConnectionToPokemonService() {
         pokemonServiceConnection = new ServiceConnection() {
             @Override
@@ -339,7 +341,7 @@ public class MainActivity extends AppCompatActivity {
                 pokemonService = ((PokemonService.PokemonServiceBinder)service).getService();
                 Log.d(SERVICE_TAG, "MainActivity connected to pokemon service");
 
-                final Intent intent = getIntent(); //TODO This might cause problems later, should be changed
+                final Intent intent = getIntent();
                 if (intent.hasExtra("Username") && newUser) {
                     pokemonService.CreateUser(intent.getStringExtra("Username"));
                     pokemonService.AddPokemon(intent.getStringExtra("PokemonName"));
