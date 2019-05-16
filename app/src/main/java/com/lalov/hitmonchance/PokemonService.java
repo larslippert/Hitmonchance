@@ -93,6 +93,8 @@ public class PokemonService extends Service {
         }
     }
 
+
+    /* The location methods have been inspired by the TheArnieExerciseFinder demo */
     private LocationListener locationListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
@@ -146,13 +148,6 @@ public class PokemonService extends Service {
     public Context getContext() {
         return mContext;
     }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
-    //TODO Many of these should probably have null point handlers...
 
     public Pokemon GetPokemon(int position) {
         return pokemonList.get(position);
@@ -298,6 +293,8 @@ public class PokemonService extends Service {
      *  ######### DATABASE #####################################################################
      *  ######################################################################################## */
 
+    /* The database methods have been inspired by the firestore documentation at https://cloud.google.com/firestore/docs/ */
+
     private void AddUserDatabase(String username) {
         Map<String, Object> user = new HashMap<>();
         user.put("Username", username);
@@ -369,7 +366,7 @@ public class PokemonService extends Service {
                 });
     }
 
-    public void GetAllPokemonDatabase() { //TODO Should be called in StatsActivity along with a broadcastManager
+    public void GetAllPokemonDatabase() {
         pokemonList = new ArrayList<Pokemon>();
 
         docRef.collection("Pokemon").get()
@@ -396,7 +393,6 @@ public class PokemonService extends Service {
                                 }
 
                                 Intent intent = new Intent(BROADCAST_RESULT_POKEMON);
-                                intent.putExtra("pokemonList", pokemonList);
 
                                 bmPokemon.sendBroadcast(intent);
 
@@ -446,7 +442,6 @@ public class PokemonService extends Service {
 
                                 if (opponentPokemon != null) {
                                     Intent intent = new Intent(BROADCAST_RESULT_RANDOM_POKEMON);
-                                    intent.putExtra("pokemon", opponentPokemon); //TODO Might not make sense to put this here
 
                                     bmRandomPokemon.sendBroadcast(intent);
                                 }
@@ -473,7 +468,6 @@ public class PokemonService extends Service {
                                     }
                                 }
                                 Intent intent = new Intent(BROADCAST_RESULT_USERS);
-                                intent.putExtra("userList", userList);
 
                                 bmUsers.sendBroadcast(intent);
                             }
@@ -492,7 +486,6 @@ public class PokemonService extends Service {
                             username = documentSnapshot.getString("Username");
 
                             Intent intent = new Intent(BROADCAST_RESULT_USERNAME);
-                            intent.putExtra("Username", username);
 
                             bmUsername.sendBroadcast(intent);
                         }
@@ -501,7 +494,6 @@ public class PokemonService extends Service {
                             username = currentUser.getEmail();
 
                             Intent intent = new Intent(BROADCAST_RESULT_USERNAME);
-                            intent.putExtra("Username", username);
 
                             bmUsername.sendBroadcast(intent);
                         }
@@ -514,7 +506,6 @@ public class PokemonService extends Service {
                         username = currentUser.getEmail();
 
                         Intent intent = new Intent(BROADCAST_RESULT_USERNAME);
-                        intent.putExtra("Username", username);
 
                         bmUsername.sendBroadcast(intent);
                     }
