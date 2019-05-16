@@ -43,10 +43,10 @@ public class BattleActivity extends AppCompatActivity {
     private PokemonService pokemonService;
     private ServiceConnection pokemonServiceConnection;
     private boolean bound = false;
-
+    // Pokemons for battle
     private Pokemon usersSelectedPokemon;
     private Pokemon enemiesSelectedPokemon;
-
+    // For SaveInstanceState
     boolean battle = false;
     boolean opponentChosen = true;
 
@@ -60,6 +60,7 @@ public class BattleActivity extends AppCompatActivity {
              InitPokemon();
         }
     };
+    // For playing music
     MediaPlayer pokemonBattleSong;
 
     @Override
@@ -67,6 +68,7 @@ public class BattleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_battle);
 
+        //Connection and binding to service
         setupConnectionToPokemonService();
         bindToPokemonService();
 
@@ -87,6 +89,7 @@ public class BattleActivity extends AppCompatActivity {
         pokemonBattleSong = MediaPlayer.create(getApplicationContext(), R.raw.battle_music);
         pokemonBattleSong.start();
 
+        // Save Instance state
         if(savedInstanceState != null){
             txtWinner.setText((savedInstanceState.getString("Winner")));
             battle = savedInstanceState.getBoolean("Battle");
@@ -106,14 +109,14 @@ public class BattleActivity extends AppCompatActivity {
             }
 
         }
-
+        //Go to pokedex
         btnGoToPokedex.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
-
+        // Battle
         btnBattle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -180,7 +183,6 @@ public class BattleActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
         unBindFromPokemonService();
     }
 
@@ -199,7 +201,7 @@ public class BattleActivity extends AppCompatActivity {
             bound = false;
         }
     }
-
+    // Initializing the pokemons
     private void InitPokemon() {
         new DownloadImageTask((ImageView) findViewById(R.id.imageViewUserPokemon)).execute(usersSelectedPokemon.getImage());
         new DownloadImageTask((ImageView) findViewById(R.id.imageViewEnemyPokemon)).execute(enemiesSelectedPokemon.getImage());
@@ -210,7 +212,7 @@ public class BattleActivity extends AppCompatActivity {
         txtUsersPokemonName.setText(usersSelectedPokemon.getName());
         txtUsersPokemonStats.setText(getApplicationContext().getResources().getString(R.string.totalstats)+" "+Long.toString(calculateTotalStats(usersSelectedPokemon)));
     }
-
+    // Calculate the pokemons total stats
     private Long calculateTotalStats(Pokemon pokemon){
         long hp = pokemon.getHp();
         long attack = pokemon.getAttack();
@@ -222,7 +224,7 @@ public class BattleActivity extends AppCompatActivity {
         Long totalStat = hp+attack+defense+spAttack+spDefense+speed;
         return totalStat;
     }
-
+    // Find i winner
     private void determinateWinner(long userStats, long enemyStats){
         Random rand = new Random();
         int totalStats = (int) (userStats + enemyStats);
@@ -254,7 +256,7 @@ public class BattleActivity extends AppCompatActivity {
         pokemonBattleSong.stop();
         pokemonBattleSong.release();
     }
-
+    // Save instance state
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);

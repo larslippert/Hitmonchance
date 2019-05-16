@@ -52,17 +52,16 @@ import static com.lalov.hitmonchance.Globals.SERVICE_TAG;
 import static com.lalov.hitmonchance.Globals.TIME_TO_PASS;
 
 public class MainActivity extends AppCompatActivity {
-
-    //TODO Error where pokemon is added to list twice
-
+    // For adaptor
     private PokemonAdaptor pokemonAdaptor;
     private SwipeMenuListView pokemonListView;
     private ArrayList<Pokemon> pokemonList;
+
     Button btnAddPokemon;
     ImageButton imgBtnSettings, imgBtnMusic;
     EditText txtSearchPokemon;
     TextView txtUser;
-
+    // Firebase
     FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     DocumentReference docRef;

@@ -19,7 +19,7 @@ import com.lalov.hitmonchance.R;
 
 import static com.lalov.hitmonchance.Globals.SERVICE_TAG;
 
-//TODO Could add wins and loses count
+
 public class StatsActivity extends AppCompatActivity {
     TextView txtName, txtDexNo, txtHPStat, txtAttackStat, txtDefenseStat
             , txtSpAtkStat, txtSpDefStat, txtSpeedStat, txtTotalStats;
