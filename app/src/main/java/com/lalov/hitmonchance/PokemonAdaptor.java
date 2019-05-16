@@ -71,9 +71,4 @@ public class PokemonAdaptor extends BaseAdapter{
         }
         return convertView;
     }
-
-    public void UpdatePokemons(List<Pokemon> pokemonList){
-           pokemons.clear();
-           pokemons.addAll(pokemonList);
-    }
 }
