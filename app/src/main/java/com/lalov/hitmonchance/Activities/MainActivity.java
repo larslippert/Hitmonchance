@@ -196,6 +196,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // Code about SwipeMenuListView is from https://github.com/baoyongzhang/SwipeMenuListView
         SwipeMenuCreator creator = new SwipeMenuCreator() {
 
             @Override
@@ -219,7 +220,7 @@ public class MainActivity extends AppCompatActivity {
         };
 
         // set creator
-        pokemonListView.setMenuCreator(creator);
+        pokemonListView.setMenuCreator(creator); // Still from https://github.com/baoyongzhang/SwipeMenuListView
 
         pokemonListView.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
             @Override

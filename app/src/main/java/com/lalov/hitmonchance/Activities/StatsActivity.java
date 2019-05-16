@@ -21,8 +21,8 @@ import static com.lalov.hitmonchance.Globals.SERVICE_TAG;
 
 //TODO Could add wins and loses count
 public class StatsActivity extends AppCompatActivity {
-    TextView txtName, txtDexNo, txtHP, txtHPStat, txtAttack, txtAttackStat, txtDefense, txtDefenseStat
-            ,txtSpAtk, txtSpAtkStat, txtSpDef, txtSpDefStat, txtSpeed, txtSpeedStat, txtTotalStats;
+    TextView txtName, txtDexNo, txtHPStat, txtAttackStat, txtDefenseStat
+            , txtSpAtkStat, txtSpDefStat, txtSpeedStat, txtTotalStats;
     ImageView imgPokemon;
 
     private ServiceConnection pokemonServiceConnection;
@@ -43,17 +43,11 @@ public class StatsActivity extends AppCompatActivity {
 
         txtName = findViewById(R.id.txtName);
         txtDexNo = findViewById(R.id.txtDexNo);
-        txtHP = findViewById(R.id.txtHP);
         txtHPStat = findViewById(R.id.txtHPStat);
-        txtAttack = findViewById(R.id.txtAttack);
         txtAttackStat = findViewById(R.id.txtAttackStat);
-        txtDefense = findViewById(R.id.txtDefense);
         txtDefenseStat = findViewById(R.id.txtDefenseStat);
-        txtSpAtk = findViewById(R.id.txtSpAtk);
         txtSpAtkStat = findViewById(R.id.txtSpAtkStat);
-        txtSpDef = findViewById(R.id.txtSpDef);
         txtSpDefStat = findViewById(R.id.txtSpDefStat);
-        txtSpeed = findViewById(R.id.txtSpeed);
         txtSpeedStat = findViewById(R.id.txtSpeedStat);
         imgPokemon = findViewById(R.id.imageView);
         txtTotalStats = findViewById(R.id.txtTotalStats);
@@ -94,7 +88,7 @@ public class StatsActivity extends AppCompatActivity {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
                 pokemonService = ((PokemonService.PokemonServiceBinder)service).getService();
-                Log.d(SERVICE_TAG, "MainActivity connected to pokemon service");
+                Log.d(SERVICE_TAG, "StatsActivity connected to pokemon service");
 
                 final Intent intent = getIntent(); //TODO This might cause problems later, should be changed
 
@@ -105,7 +99,7 @@ public class StatsActivity extends AppCompatActivity {
             @Override
             public void onServiceDisconnected(ComponentName name) {
                 pokemonService = null;
-                Log.d(SERVICE_TAG, "MainActivity disconnected from pokemon service");
+                Log.d(SERVICE_TAG, "StatsActivity disconnected from pokemon service");
             }
         };
     }
